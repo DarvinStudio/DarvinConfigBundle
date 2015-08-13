@@ -28,10 +28,16 @@ class ConfigurationPool
 
     /**
      * @param \Darvin\ConfigBundle\Configuration\ConfigurationInterface $configuration Configuration
+     *
+     * @throws \Darvin\ConfigBundle\Configuration\ConfigurationException
      */
     public function add(ConfigurationInterface $configuration)
     {
-        $this->configurations[] = $configuration;
+        if (isset($this->configurations[$configuration->getName()])) {
+            throw new ConfigurationException(sprintf('Configuration "%s" already exists.', $configuration->getName()));
+        }
+
+        $this->configurations[$configuration->getName()] = $configuration;
     }
 
     /**
