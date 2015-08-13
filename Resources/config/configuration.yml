@@ -1,0 +1,6 @@
+parameters:
+    darvin_config.configuration.pool.class: Darvin\ConfigBundle\Configuration\ConfigurationPool
+
+services:
+    darvin_config.configuration.pool:
+        class: %darvin_config.configuration.pool.class%
