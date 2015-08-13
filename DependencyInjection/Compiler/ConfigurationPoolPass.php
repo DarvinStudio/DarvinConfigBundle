@@ -6,7 +6,7 @@
  * Time: 16:00
  */
 
-namespace Darvin\ConfigBundle\Configuration\Compiler;
+namespace Darvin\ConfigBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
