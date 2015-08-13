@@ -11,7 +11,7 @@ namespace Darvin\ConfigBundle\Configuration;
 /**
  * Configuration
  */
-class ConfigurationInterface
+interface ConfigurationInterface
 {
 
 }
