@@ -1,0 +1,24 @@
+{
+    "name":        "darvinstudio/darvin-config-bundle",
+    "description": "This bundle provides configuration layer for Symfony2-based applications.",
+    "keywords":    ["configuration"],
+    "type":        "symfony-bundle",
+    "license":     "MIT",
+    "authors": [
+        {
+            "name":     "Darvin Studio",
+            "email":    "info@darvin-studio.ru",
+            "homepage": "https://www.darvin-studio.ru"
+        }
+    ],
+    "require": {
+        "php":                              ">=5.3.9",
+        "symfony/symfony":                  "2.7.*",
+        "doctrine/orm":                     "~2.2,>=2.2.3,<2.5",
+        "doctrine/dbal":                    "<2.5",
+        "doctrine/doctrine-bundle":         "~1.4"
+    },
+    "autoload": {
+        "psr-4": { "Darvin\\ConfigBundle\\": "" }
+    }
+}
