@@ -32,7 +32,7 @@ class Parameter
      *
      * @ORM\Column(type="string")
      */
-    private $bundle;
+    private $configurationName;
 
     /**
      * @var string
@@ -64,13 +64,13 @@ class Parameter
     }
 
     /**
-     * @param string $bundle bundle
+     * @param string $configurationName configurationName
      *
      * @return Parameter
      */
-    public function setBundle($bundle)
+    public function setConfigurationName($configurationName)
     {
-        $this->bundle = $bundle;
+        $this->configurationName = $configurationName;
 
         return $this;
     }
@@ -78,9 +78,9 @@ class Parameter
     /**
      * @return string
      */
-    public function getBundle()
+    public function getConfigurationName()
     {
-        return $this->bundle;
+        return $this->configurationName;
     }
 
     /**

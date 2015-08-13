@@ -13,5 +13,23 @@ namespace Darvin\ConfigBundle\Configuration;
  */
 interface ConfigurationInterface
 {
+    /**
+     * @return \Darvin\ConfigBundle\Parameter\Parameter[]
+     */
+    public function getModel();
 
+    /**
+     * @param array $values Parameter values
+     */
+    public function setValues(array $values);
+
+    /**
+     * @return array
+     */
+    public function getValues();
+
+    /**
+     * @return string
+     */
+    public function getName();
 }

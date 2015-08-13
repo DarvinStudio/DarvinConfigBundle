@@ -21,11 +21,6 @@ class Parameter
     /**
      * @var string
      */
-    private $bundle;
-
-    /**
-     * @var string
-     */
     private $name;
 
     /**
@@ -36,31 +31,18 @@ class Parameter
     /**
      * @var mixed
      */
-    private $value;
-
-    /**
-     * @var mixed
-     */
     private $defaultValue;
 
     /**
-     * @param string $bundle bundle
-     *
-     * @return Parameter
+     * @param string $name         Name
+     * @param string $type         Type
+     * @param mixed  $defaultValue Default value
      */
-    public function setBundle($bundle)
+    public function __construct($name, $type, $defaultValue)
     {
-        $this->bundle = $bundle;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getBundle()
-    {
-        return $this->bundle;
+        $this->name = $name;
+        $this->type = $type;
+        $this->defaultValue = $defaultValue;
     }
 
     /**
@@ -101,26 +83,6 @@ class Parameter
     public function getType()
     {
         return $this->type;
-    }
-
-    /**
-     * @param mixed $value value
-     *
-     * @return Parameter
-     */
-    public function setValue($value)
-    {
-        $this->value = $value;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getValue()
-    {
-        return $this->value;
     }
 
     /**
