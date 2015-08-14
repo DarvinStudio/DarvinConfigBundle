@@ -96,10 +96,8 @@ class ConfigurationPool
     {
         $parameters = array();
 
-        $parameterValueConverter = new ParameterValueConverter();
-
         foreach ($this->configurations as $configuration) {
-            $parameters = array_merge($parameters, $this->getParameters($configuration, $parameterValueConverter));
+            $parameters = array_merge($parameters, $this->getParameters($configuration));
         }
 
         $this->parameterRepository->save($parameters);
@@ -110,16 +108,15 @@ class ConfigurationPool
      */
     public function saveConfiguration(ConfigurationInterface $configuration)
     {
-        $this->parameterRepository->save($this->getParameters($configuration, new ParameterValueConverter()));
+        $this->parameterRepository->save($this->getParameters($configuration));
     }
 
     /**
-     * @param \Darvin\ConfigBundle\Configuration\ConfigurationInterface $configuration           Configuration
-     * @param \Darvin\ConfigBundle\Parameter\ParameterValueConverter    $parameterValueConverter Configuration parameter value converter
+     * @param \Darvin\ConfigBundle\Configuration\ConfigurationInterface $configuration Configuration
      *
      * @return array
      */
-    private function getParameters(ConfigurationInterface $configuration, ParameterValueConverter $parameterValueConverter)
+    private function getParameters(ConfigurationInterface $configuration)
     {
         $parameters = array();
 
@@ -132,7 +129,7 @@ class ConfigurationPool
             $value = array_key_exists($parameterName, $values)
                 ? $values[$parameterName]
                 : $parameterModel->getDefaultValue();
-            $value = $parameterValueConverter->toString($value, $parameterType);
+            $value = ParameterValueConverter::toString($value, $parameterType);
 
             $parameters[] = new Parameter($configuration->getName(), $parameterName, $parameterType, $value);
         }
@@ -148,8 +145,6 @@ class ConfigurationPool
     {
         $values = array();
 
-        $parameterValueConverter = new ParameterValueConverter();
-
         foreach ($configuration->getModel() as $parameterModel) {
             $parameterName = $parameterModel->getName();
 
@@ -160,7 +155,7 @@ class ConfigurationPool
                 $value = $parameterModel->getDefaultValue();
             }
 
-            $values[$parameterName] = $parameterValueConverter->fromString($value, $parameterModel->getType());
+            $values[$parameterName] = ParameterValueConverter::fromString($value, $parameterModel->getType());
         }
 
         $configuration->setValues($values);

@@ -49,7 +49,7 @@ class ParameterValueConverter
      *
      * @return mixed
      */
-    public function fromString($value, $type)
+    public static function fromString($value, $type)
     {
         if (isset(self::$checkTypeCallbacks[$type])) {
             $checkTypeCallback = self::$checkTypeCallbacks[$type];
@@ -59,7 +59,7 @@ class ParameterValueConverter
             }
         }
 
-        return $this->convert($value, $type, self::$fromStringCallbacks);
+        return self::convert($value, $type, self::$fromStringCallbacks);
     }
 
     /**
@@ -68,9 +68,9 @@ class ParameterValueConverter
      *
      * @return string
      */
-    public function toString($value, $type)
+    public static function toString($value, $type)
     {
-        return $this->convert($value, $type, self::$toStringCallbacks);
+        return self::convert($value, $type, self::$toStringCallbacks);
     }
 
     /**
@@ -80,7 +80,7 @@ class ParameterValueConverter
      *
      * @return mixed
      */
-    private function convert($value, $type, array $convertCallbacks)
+    private static function convert($value, $type, array $convertCallbacks)
     {
         if (!isset($convertCallbacks[$type])) {
             return $value;
