@@ -9,9 +9,9 @@
 namespace Darvin\ConfigBundle\Exception;
 
 /**
- * Config exception
+ * Base exception
  */
-class ConfigException extends \Exception
+class DarvinConfigException extends \Exception
 {
 
 }

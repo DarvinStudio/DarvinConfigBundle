@@ -8,12 +8,12 @@
 
 namespace Darvin\ConfigBundle\Configuration;
 
-use Darvin\ConfigBundle\Exception\ConfigException;
+use Darvin\ConfigBundle\Exception\DarvinConfigException;
 
 /**
  * Configuration exception
  */
-class ConfigurationException extends ConfigException
+class ConfigurationException extends DarvinConfigException
 {
 
 }
