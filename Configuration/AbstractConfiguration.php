@@ -63,6 +63,23 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     }
 
     /**
+     * @param string $parameterName  Parameter name
+     * @param mixed  $parameterValue Parameter value
+     *
+     * @throws \Darvin\ConfigBundle\Configuration\ConfigurationException
+     */
+    public function __set($parameterName, $parameterValue)
+    {
+        if (!array_key_exists($parameterName, $this->values)) {
+            throw new ConfigurationException(
+                sprintf('Parameter "%s" is not defined in configuration "%s".', $parameterName, $this->getName())
+            );
+        }
+
+        $this->values[$parameterName] = $parameterValue;
+    }
+
+    /**
      * @param string $parameterName Configuration parameter name
      *
      * @return mixed
