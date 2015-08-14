@@ -9,6 +9,7 @@
 namespace Darvin\ConfigBundle\Configuration;
 
 use Darvin\ConfigBundle\Parameter\Parameter;
+use Darvin\ConfigBundle\Parameter\ParameterValueConverter;
 use Darvin\ConfigBundle\Repository\ParameterRepositoryInterface;
 
 /**
@@ -72,17 +73,21 @@ class ConfigurationPool
     {
         $parameters = array();
 
+        $valueConverter = new ParameterValueConverter();
+
         foreach ($this->configurations as $configurationName => $configuration) {
             $values = $configuration->getValues();
 
             foreach ($configuration->getModel() as $parameterModel) {
                 $parameterName = $parameterModel->getName();
-                $parameters[] = new Parameter(
-                    $configurationName,
-                    $parameterName,
-                    $parameterModel->getType(),
-                    array_key_exists($parameterName, $values) ? $values[$parameterName] : $parameterModel->getDefaultValue()
-                );
+                $parameterType = $parameterModel->getType();
+
+                $value = array_key_exists($parameterName, $values)
+                    ? $values[$parameterName]
+                    : $parameterModel->getDefaultValue();
+                $value = $valueConverter->toString($value, $parameterType);
+
+                $parameters[] = new Parameter($configurationName, $parameterName, $parameterType, $value);
             }
         }
 

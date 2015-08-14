@@ -13,6 +13,7 @@ namespace Darvin\ConfigBundle\Parameter;
  */
 class ParameterModel
 {
+    const TYPE_ARRAY   = 'array';
     const TYPE_BOOL    = 'boolean';
     const TYPE_FLOAT   = 'float';
     const TYPE_INTEGER = 'integer';
