@@ -17,7 +17,7 @@ class ParameterModel
 {
     const TYPE_ARRAY   = 'array';
     const TYPE_BOOL    = 'boolean';
-    const TYPE_FLOAT   = 'float';
+    const TYPE_FLOAT   = 'double';
     const TYPE_INTEGER = 'integer';
     const TYPE_STRING  = 'string';
 
