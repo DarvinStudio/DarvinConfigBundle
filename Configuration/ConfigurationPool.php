@@ -19,17 +19,6 @@ use Darvin\ConfigBundle\Repository\ParameterRepositoryInterface;
 class ConfigurationPool
 {
     /**
-     * @var array
-     */
-    private static $checkTypeCallbacks = array(
-        ParameterModel::TYPE_ARRAY   => 'is_array',
-        ParameterModel::TYPE_BOOL    => 'is_bool',
-        ParameterModel::TYPE_FLOAT   => 'is_float',
-        ParameterModel::TYPE_INTEGER => 'is_int',
-        ParameterModel::TYPE_STRING  => 'is_string',
-    );
-
-    /**
      * @var \Darvin\ConfigBundle\Repository\ParameterRepositoryInterface
      */
     private $parameterRepository;
@@ -202,10 +191,7 @@ class ConfigurationPool
 
                 throw new ConfigurationException($message);
             }
-
-            $checkTypeCallback = self::$checkTypeCallbacks[$parameterType];
-
-            if (null !== $parameterDefaultValue && !$checkTypeCallback($parameterDefaultValue)) {
+            if (null !== $parameterDefaultValue && gettype($parameterDefaultValue) !== $parameterType) {
                 $message = sprintf(
                     'Parameter "%s" of configuration "%s" must have default value of "%s" type, "%s" type value provided.',
                     $parameterName,
