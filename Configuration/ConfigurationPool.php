@@ -120,6 +120,7 @@ class ConfigurationPool
      * @param \Darvin\ConfigBundle\Configuration\ConfigurationInterface $configuration Configuration
      *
      * @return array
+     * @throws \Darvin\ConfigBundle\Configuration\ConfigurationException
      */
     private function getConfigurationParameters(ConfigurationInterface $configuration)
     {
@@ -131,9 +132,24 @@ class ConfigurationPool
             $parameterName = $parameterModel->getName();
             $parameterType = $parameterModel->getType();
 
-            $value = array_key_exists($parameterName, $values)
-                ? $values[$parameterName]
-                : $parameterModel->getDefaultValue();
+            if (array_key_exists($parameterName, $values)) {
+                $value = $values[$parameterName];
+
+                if (null !== $value && gettype($value) !== $parameterType) {
+                    $message = sprintf(
+                        'Parameter "%s" of configuration "%s" must have value of "%s" type, "%s" type value provided.',
+                        $parameterName,
+                        $configuration->getName(),
+                        $parameterType,
+                        gettype($value)
+                    );
+
+                    throw new ConfigurationException($message);
+                }
+            } else {
+                $value = $parameterModel->getDefaultValue();
+            }
+
             $value = ParameterValueConverter::toString($value, $parameterType);
 
             $parameters[] = new Parameter($configuration->getName(), $parameterName, $parameterType, $value);
@@ -180,17 +196,6 @@ class ConfigurationPool
             $parameterType = $parameterModel->getType();
             $parameterDefaultValue = $parameterModel->getDefaultValue();
 
-            if (!ParameterModel::isTypeExists($parameterType)) {
-                $message = sprintf(
-                    'Type "%s" of "%s" configuration parameter "%s" is not supported. Supported types: "%s".',
-                    $parameterType,
-                    $configuration->getName(),
-                    $parameterName,
-                    implode('", "', ParameterModel::getTypes())
-                );
-
-                throw new ConfigurationException($message);
-            }
             if (null !== $parameterDefaultValue && gettype($parameterDefaultValue) !== $parameterType) {
                 $message = sprintf(
                     'Parameter "%s" of configuration "%s" must have default value of "%s" type, "%s" type value provided.',
@@ -198,6 +203,17 @@ class ConfigurationPool
                     $configuration->getName(),
                     $parameterType,
                     gettype($parameterDefaultValue)
+                );
+
+                throw new ConfigurationException($message);
+            }
+            if (!ParameterModel::isTypeExists($parameterType)) {
+                $message = sprintf(
+                    'Type "%s" of "%s" configuration parameter "%s" is not supported. Supported types: "%s".',
+                    $parameterType,
+                    $configuration->getName(),
+                    $parameterName,
+                    implode('", "', ParameterModel::getTypes())
                 );
 
                 throw new ConfigurationException($message);
