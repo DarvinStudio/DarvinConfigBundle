@@ -104,12 +104,12 @@ class ConfigurationPool
     /**
      * Saves configurations.
      */
-    public function save()
+    public function saveAll()
     {
         $parameters = array();
 
         foreach ($this->configurations as $configuration) {
-            $parameters = array_merge($parameters, $this->getParameters($configuration));
+            $parameters = array_merge($parameters, $this->getConfigurationParameters($configuration));
         }
 
         $this->parameterRepository->save($parameters);
@@ -118,9 +118,9 @@ class ConfigurationPool
     /**
      * @param \Darvin\ConfigBundle\Configuration\ConfigurationInterface $configuration Configuration to save
      */
-    public function saveConfiguration(ConfigurationInterface $configuration)
+    public function save(ConfigurationInterface $configuration)
     {
-        $this->parameterRepository->save($this->getParameters($configuration));
+        $this->parameterRepository->save($this->getConfigurationParameters($configuration));
     }
 
     /**
@@ -128,7 +128,7 @@ class ConfigurationPool
      *
      * @return array
      */
-    private function getParameters(ConfigurationInterface $configuration)
+    private function getConfigurationParameters(ConfigurationInterface $configuration)
     {
         $parameters = array();
 
