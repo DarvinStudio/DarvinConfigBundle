@@ -8,22 +8,36 @@
 
 namespace Darvin\ConfigBundle\Configuration;
 
+use Darvin\ConfigBundle\Repository\ParameterRepositoryInterface;
+
 /**
  * Configuration pool
  */
 class ConfigurationPool
 {
     /**
+     * @var \Darvin\ConfigBundle\Repository\ParameterRepositoryInterface
+     */
+    private $parameterRepository;
+
+    /**
      * @var \Darvin\ConfigBundle\Configuration\ConfigurationInterface[]
      */
     private $configurations;
 
     /**
-     * Constructor
+     * @var bool
      */
-    public function __construct()
+    private $initialized;
+
+    /**
+     * @param \Darvin\ConfigBundle\Repository\ParameterRepositoryInterface $parameterRepository Configuration parameter repository
+     */
+    public function __construct(ParameterRepositoryInterface $parameterRepository)
     {
+        $this->parameterRepository = $parameterRepository;
         $this->configurations = array();
+        $this->initialized = false;
     }
 
     /**
@@ -45,6 +59,34 @@ class ConfigurationPool
      */
     public function getAll()
     {
+        $this->init();
+
         return $this->configurations;
+    }
+
+    private function init()
+    {
+        if ($this->initialized) {
+            return;
+        }
+        foreach ($this->configurations as $configuration) {
+            $this->initConfiguration($configuration);
+        }
+
+        $this->initialized = true;
+    }
+
+    /**
+     * @param \Darvin\ConfigBundle\Configuration\ConfigurationInterface $configuration Configuration to initialize
+     */
+    private function initConfiguration(ConfigurationInterface $configuration)
+    {
+        $values = array();
+
+        foreach ($configuration->getModel() as $parameterModel) {
+            $values[$parameterModel->getName()] = $parameterModel->getDefaultValue();
+        }
+
+        $configuration->setValues($values);
     }
 }

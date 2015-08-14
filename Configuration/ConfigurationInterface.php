@@ -14,7 +14,7 @@ namespace Darvin\ConfigBundle\Configuration;
 interface ConfigurationInterface
 {
     /**
-     * @return \Darvin\ConfigBundle\Parameter\Parameter[]
+     * @return \Darvin\ConfigBundle\Parameter\ParameterModel[]
      */
     public function getModel();
 

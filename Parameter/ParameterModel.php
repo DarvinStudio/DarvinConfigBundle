@@ -11,7 +11,7 @@ namespace Darvin\ConfigBundle\Parameter;
 /**
  * Configuration parameter model
  */
-class Parameter
+class ParameterModel
 {
     const TYPE_BOOL    = 'boolean';
     const TYPE_FLOAT   = 'float';
@@ -48,7 +48,7 @@ class Parameter
     /**
      * @param string $name name
      *
-     * @return Parameter
+     * @return ParameterModel
      */
     public function setName($name)
     {
@@ -68,7 +68,7 @@ class Parameter
     /**
      * @param string $type type
      *
-     * @return Parameter
+     * @return ParameterModel
      */
     public function setType($type)
     {
@@ -88,7 +88,7 @@ class Parameter
     /**
      * @param mixed $defaultValue defaultValue
      *
-     * @return Parameter
+     * @return ParameterModel
      */
     public function setDefaultValue($defaultValue)
     {

@@ -4,3 +4,5 @@ parameters:
 services:
     darvin_config.configuration.pool:
         class: %darvin_config.configuration.pool.class%
+        arguments:
+            - "@darvin_config.parameter.repository"
