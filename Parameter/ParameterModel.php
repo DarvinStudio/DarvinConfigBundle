@@ -48,15 +48,22 @@ class ParameterModel
     private $defaultValue;
 
     /**
+     * @var array
+     */
+    private $options;
+
+    /**
      * @param string $name         Name
      * @param string $type         Type
      * @param mixed  $defaultValue Default value
+     * @param array  $options      Options
      */
-    public function __construct($name, $type, $defaultValue = null)
+    public function __construct($name, $type, $defaultValue = null, array $options = array())
     {
         $this->name = StringsUtil::toUnderscore($name);
         $this->type = $type;
         $this->defaultValue = $defaultValue;
+        $this->options = $options;
     }
 
     /**
@@ -135,5 +142,13 @@ class ParameterModel
     public function getDefaultValue()
     {
         return $this->defaultValue;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
     }
 }
