@@ -9,6 +9,7 @@
 namespace Darvin\ConfigBundle\Configuration;
 
 use Darvin\ConfigBundle\Parameter\Parameter;
+use Darvin\ConfigBundle\Parameter\ParameterModel;
 use Darvin\ConfigBundle\Parameter\ParameterValueConverter;
 use Darvin\ConfigBundle\Repository\ParameterRepositoryInterface;
 
@@ -17,6 +18,17 @@ use Darvin\ConfigBundle\Repository\ParameterRepositoryInterface;
  */
 class ConfigurationPool
 {
+    /**
+     * @var array
+     */
+    private static $checkTypeCallbacks = array(
+        ParameterModel::TYPE_ARRAY   => 'is_array',
+        ParameterModel::TYPE_BOOL    => 'is_bool',
+        ParameterModel::TYPE_FLOAT   => 'is_float',
+        ParameterModel::TYPE_INTEGER => 'is_int',
+        ParameterModel::TYPE_STRING  => 'is_string',
+    );
+
     /**
      * @var \Darvin\ConfigBundle\Repository\ParameterRepositoryInterface
      */
@@ -148,14 +160,14 @@ class ConfigurationPool
         foreach ($configuration->getModel() as $parameterModel) {
             $parameterName = $parameterModel->getName();
 
-            if (isset($parameters[$parameterName])) {
-                $parameter = $parameters[$parameterName];
-                $value = $parameter->getValue();
-            } else {
-                $value = $parameterModel->getDefaultValue();
+            if (!isset($parameters[$parameterName])) {
+                $values[$parameterName] = $parameterModel->getDefaultValue();
+
+                continue;
             }
 
-            $values[$parameterName] = ParameterValueConverter::fromString($value, $parameterModel->getType());
+            $parameter = $parameters[$parameterName];
+            $values[$parameterName] = ParameterValueConverter::fromString($parameter->getValue(), $parameterModel->getType());
         }
 
         $configuration->setValues($values);
@@ -172,7 +184,22 @@ class ConfigurationPool
 
         foreach ($configuration->getModel() as $parameterModel) {
             $parameterName = $parameterModel->getName();
+            $parameterType = $parameterModel->getType();
+            $parameterDefaultValue = $parameterModel->getDefaultValue();
 
+            $checkTypeCallback = self::$checkTypeCallbacks[$parameterType];
+
+            if (!$checkTypeCallback($parameterDefaultValue)) {
+                $message = sprintf(
+                    'Parameter "%s" of configuration "%s" must have default value of "%s" type, value of "%s" type provided.',
+                    $parameterName,
+                    $configuration->getName(),
+                    $parameterType,
+                    gettype($parameterDefaultValue)
+                );
+
+                throw new ConfigurationException($message);
+            }
             if (in_array($parameterName, $parameterNames)) {
                 $message = sprintf(
                     'Parameter "%s" of configuration "%s" already defined.',

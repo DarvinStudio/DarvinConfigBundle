@@ -16,16 +16,6 @@ class ParameterValueConverter
     /**
      * @var array
      */
-    private static $checkTypeCallbacks = array(
-        ParameterModel::TYPE_ARRAY   => 'is_array',
-        ParameterModel::TYPE_BOOL    => 'is_bool',
-        ParameterModel::TYPE_FLOAT   => 'is_float',
-        ParameterModel::TYPE_INTEGER => 'is_int',
-    );
-
-    /**
-     * @var array
-     */
     private static $fromStringCallbacks = array(
         ParameterModel::TYPE_ARRAY   => 'json_decode',
         ParameterModel::TYPE_BOOL    => 'boolval',
@@ -44,21 +34,13 @@ class ParameterValueConverter
     );
 
     /**
-     * @param mixed  $value Parameter value
+     * @param string $value Parameter value
      * @param string $type  Parameter type
      *
      * @return mixed
      */
     public static function fromString($value, $type)
     {
-        if (isset(self::$checkTypeCallbacks[$type])) {
-            $checkTypeCallback = self::$checkTypeCallbacks[$type];
-
-            if ($checkTypeCallback($value)) {
-                return $value;
-            }
-        }
-
         return self::convert($value, $type, self::$fromStringCallbacks);
     }
 
