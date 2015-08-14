@@ -73,6 +73,14 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
+    public function save()
+    {
+        $this->configurationPool->saveConfiguration($this);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function setValues(array $values)
     {
         $this->values = $values;

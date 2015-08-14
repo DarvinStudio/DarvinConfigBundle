@@ -24,6 +24,11 @@ interface ConfigurationInterface
     public function getModel();
 
     /**
+     * Saves configuration.
+     */
+    public function save();
+
+    /**
      * @param array $values Parameter values
      */
     public function setValues(array $values);

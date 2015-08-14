@@ -98,23 +98,46 @@ class ConfigurationPool
 
         $parameterValueConverter = new ParameterValueConverter();
 
-        foreach ($this->configurations as $configurationName => $configuration) {
-            $values = $configuration->getValues();
-
-            foreach ($configuration->getModel() as $parameterModel) {
-                $parameterName = $parameterModel->getName();
-                $parameterType = $parameterModel->getType();
-
-                $value = array_key_exists($parameterName, $values)
-                    ? $values[$parameterName]
-                    : $parameterModel->getDefaultValue();
-                $value = $parameterValueConverter->toString($value, $parameterType);
-
-                $parameters[] = new Parameter($configurationName, $parameterName, $parameterType, $value);
-            }
+        foreach ($this->configurations as $configuration) {
+            $parameters = array_merge($parameters, $this->getParameters($configuration, $parameterValueConverter));
         }
 
         $this->parameterRepository->save($parameters);
+    }
+
+    /**
+     * @param \Darvin\ConfigBundle\Configuration\ConfigurationInterface $configuration Configuration to save
+     */
+    public function saveConfiguration(ConfigurationInterface $configuration)
+    {
+        $this->parameterRepository->save($this->getParameters($configuration, new ParameterValueConverter()));
+    }
+
+    /**
+     * @param \Darvin\ConfigBundle\Configuration\ConfigurationInterface $configuration           Configuration
+     * @param \Darvin\ConfigBundle\Parameter\ParameterValueConverter    $parameterValueConverter Configuration parameter value converter
+     *
+     * @return array
+     */
+    private function getParameters(ConfigurationInterface $configuration, ParameterValueConverter $parameterValueConverter)
+    {
+        $parameters = array();
+
+        $values = $configuration->getValues();
+
+        foreach ($configuration->getModel() as $parameterModel) {
+            $parameterName = $parameterModel->getName();
+            $parameterType = $parameterModel->getType();
+
+            $value = array_key_exists($parameterName, $values)
+                ? $values[$parameterName]
+                : $parameterModel->getDefaultValue();
+            $value = $parameterValueConverter->toString($value, $parameterType);
+
+            $parameters[] = new Parameter($configuration->getName(), $parameterName, $parameterType, $value);
+        }
+
+        return $parameters;
     }
 
     /**
