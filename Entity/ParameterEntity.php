@@ -8,15 +8,16 @@
 
 namespace Darvin\ConfigBundle\Entity;
 
+use Darvin\ConfigBundle\Parameter\Parameter;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Configuration parameter
+ * Configuration parameter entity
  *
  * @ORM\Entity(repositoryClass="Darvin\ConfigBundle\Repository\ParameterRepository")
  * @ORM\Table(name="configuration")
  */
-class Parameter
+class ParameterEntity
 {
     /**
      * @var string
@@ -56,23 +57,30 @@ class Parameter
     private $value;
 
     /**
+     * @param \Darvin\ConfigBundle\Parameter\Parameter $parameter Parameter
+     */
+    public function updateFromParameter(Parameter $parameter)
+    {
+        $this->configurationName = $parameter->getConfigurationName();
+        $this->name = $parameter->getName();
+        $this->type = $parameter->getType();
+        $this->value = $parameter->getValue();
+    }
+
+    /**
+     * @return \Darvin\ConfigBundle\Parameter\Parameter
+     */
+    public function toParameter()
+    {
+        return new Parameter($this->configurationName, $this->name, $this->type, $this->value);
+    }
+
+    /**
      * @return string
      */
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @param string $configurationName configurationName
-     *
-     * @return Parameter
-     */
-    public function setConfigurationName($configurationName)
-    {
-        $this->configurationName = $configurationName;
-
-        return $this;
     }
 
     /**
@@ -84,18 +92,6 @@ class Parameter
     }
 
     /**
-     * @param string $name name
-     *
-     * @return Parameter
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getName()
@@ -104,35 +100,11 @@ class Parameter
     }
 
     /**
-     * @param string $type type
-     *
-     * @return Parameter
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getType()
     {
         return $this->type;
-    }
-
-    /**
-     * @param string $value value
-     *
-     * @return Parameter
-     */
-    public function setValue($value)
-    {
-        $this->value = $value;
-
-        return $this;
     }
 
     /**

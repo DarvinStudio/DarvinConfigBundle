@@ -13,5 +13,13 @@ namespace Darvin\ConfigBundle\Repository;
  */
 interface ParameterRepositoryInterface
 {
+    /**
+     * @return \Darvin\ConfigBundle\Parameter\Parameter[]
+     */
+    public function getAll();
 
+    /**
+     * @param \Darvin\ConfigBundle\Parameter\Parameter[] $parameters Configuration parameters
+     */
+    public function save(array $parameters);
 }

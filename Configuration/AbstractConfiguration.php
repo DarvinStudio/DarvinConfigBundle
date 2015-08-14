@@ -19,6 +19,14 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     private $values;
 
     /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->values = array();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function setValues(array $values)

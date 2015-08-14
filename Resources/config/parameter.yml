@@ -1,6 +1,6 @@
 parameters:
     darvin_config.parameter.repository.class:  Darvin\ConfigBundle\Repository\ParameterRepository
-    darvin_config.parameter.repository.entity: DarvinConfigBundle:Parameter
+    darvin_config.parameter.repository.entity: DarvinConfigBundle:ParameterEntity
 
 services:
     darvin_config.parameter.repository:

@@ -8,6 +8,7 @@
 
 namespace Darvin\ConfigBundle\Configuration;
 
+use Darvin\ConfigBundle\Parameter\Parameter;
 use Darvin\ConfigBundle\Repository\ParameterRepositoryInterface;
 
 /**
@@ -48,7 +49,7 @@ class ConfigurationPool
     public function add(ConfigurationInterface $configuration)
     {
         if (isset($this->configurations[$configuration->getName()])) {
-            throw new ConfigurationException(sprintf('Configuration "%s" already exists.', $configuration->getName()));
+            throw new ConfigurationException(sprintf('Configuration "%s" already added.', $configuration->getName()));
         }
 
         $this->configurations[$configuration->getName()] = $configuration;
@@ -62,6 +63,30 @@ class ConfigurationPool
         $this->init();
 
         return $this->configurations;
+    }
+
+    /**
+     * Saves configurations.
+     */
+    public function save()
+    {
+        $parameters = array();
+
+        foreach ($this->configurations as $configurationName => $configuration) {
+            $values = $configuration->getValues();
+
+            foreach ($configuration->getModel() as $parameterModel) {
+                $parameterName = $parameterModel->getName();
+                $parameters[] = new Parameter(
+                    $configurationName,
+                    $parameterName,
+                    $parameterModel->getType(),
+                    array_key_exists($parameterName, $values) ? $values[$parameterName] : $parameterModel->getDefaultValue()
+                );
+            }
+        }
+
+        $this->parameterRepository->save($parameters);
     }
 
     private function init()
