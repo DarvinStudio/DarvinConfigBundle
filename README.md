@@ -3,11 +3,11 @@ This bundle provides configuration layer for Symfony2-based applications.
 
 ## Usage
 
-1. Create class which implements Darvin\ConfigBundle\Configuration\ConfigurationInterface
+Create class which implements Darvin\ConfigBundle\Configuration\ConfigurationInterface
  or extends Darvin\ConfigBundle\Configuration\AbstractConfiguration:
 
 ```php
-// AppBundle\Configuration\Configuration.php;
+// AppBundle\Configuration\Configuration.php
 
 use Darvin\ConfigBundle\Configuration\AbstractConfiguration;
 use Darvin\ConfigBundle\Parameter\ParameterModel;
@@ -31,7 +31,7 @@ class Configuration extends AbstractConfiguration
 }
 ```
 
-2. Define created class as a service tagged with "darvin_config.configuration" tag:
+Define created class as a service tagged with "darvin_config.configuration" tag:
 
 ```yaml
 services:
