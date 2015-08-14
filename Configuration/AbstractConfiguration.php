@@ -62,7 +62,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
             return $this->values[$parameterName];
         }
         if (empty($arguments)) {
-            throw new ConfigurationException(sprintf('Missing argument 1 for "%s::%s()".'));
+            throw new ConfigurationException(sprintf('Missing argument 1 for "%s::%s()".', get_called_class(), $method));
         }
 
         $this->values[$parameterName] = reset($arguments);
