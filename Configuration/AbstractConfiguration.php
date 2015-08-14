@@ -34,14 +34,6 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function setConfigurationPool(ConfigurationPool $configurationPool)
-    {
-        $this->configurationPool = $configurationPool;
-    }
-
-    /**
      * @param string $method    Method name
      * @param array  $arguments Arguments
      *
@@ -68,6 +60,31 @@ abstract class AbstractConfiguration implements ConfigurationInterface
         $this->values[$parameterName] = reset($arguments);
 
         return $this;
+    }
+
+    /**
+     * @param string $parameterName Configuration parameter name
+     *
+     * @return mixed
+     * @throws \Darvin\ConfigBundle\Configuration\ConfigurationException
+     */
+    public function __get($parameterName)
+    {
+        if (!array_key_exists($parameterName, $this->values)) {
+            throw new ConfigurationException(
+                sprintf('Parameter "%s" is not defined in configuration "%s".', $parameterName, $this->getName())
+            );
+        }
+
+        return $this->values[$parameterName];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setConfigurationPool(ConfigurationPool $configurationPool)
+    {
+        $this->configurationPool = $configurationPool;
     }
 
     /**

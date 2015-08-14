@@ -44,6 +44,21 @@ class ConfigurationPool
     }
 
     /**
+     * @param string $configurationName Configuration name
+     *
+     * @return \Darvin\ConfigBundle\Configuration\ConfigurationInterface
+     * @throws \Darvin\ConfigBundle\Configuration\ConfigurationException
+     */
+    public function __get($configurationName)
+    {
+        if (!isset($this->configurations[$configurationName])) {
+            throw new ConfigurationException(sprintf('Configuration "%s" does not exist.', $configurationName));
+        }
+
+        return $this->configurations[$configurationName];
+    }
+
+    /**
      * @param \Darvin\ConfigBundle\Configuration\ConfigurationInterface $configuration Configuration
      *
      * @throws \Darvin\ConfigBundle\Configuration\ConfigurationException
@@ -57,6 +72,16 @@ class ConfigurationPool
         $this->validateConfiguration($configuration);
 
         $this->configurations[$configuration->getName()] = $configuration;
+    }
+
+    /**
+     * @return \Darvin\ConfigBundle\Configuration\ConfigurationInterface[]
+     */
+    public function getAll()
+    {
+        $this->init();
+
+        return $this->configurations;
     }
 
     /**
