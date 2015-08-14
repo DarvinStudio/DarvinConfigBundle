@@ -189,9 +189,9 @@ class ConfigurationPool
 
             $checkTypeCallback = self::$checkTypeCallbacks[$parameterType];
 
-            if (!$checkTypeCallback($parameterDefaultValue)) {
+            if (null !== $parameterDefaultValue && !$checkTypeCallback($parameterDefaultValue)) {
                 $message = sprintf(
-                    'Parameter "%s" of configuration "%s" must have default value of "%s" type, value of "%s" type provided.',
+                    'Parameter "%s" of configuration "%s" must have default value of "%s" type, "%s" type value provided.',
                     $parameterName,
                     $configuration->getName(),
                     $parameterType,

@@ -64,6 +64,9 @@ class ParameterValueConverter
      */
     private static function convert($value, $type, array $convertCallbacks)
     {
+        if (null === $value) {
+            return $value;
+        }
         if (!isset($convertCallbacks[$type])) {
             return $value;
         }

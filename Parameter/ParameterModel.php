@@ -41,7 +41,7 @@ class ParameterModel
      * @param string $type         Type
      * @param mixed  $defaultValue Default value
      */
-    public function __construct($name, $type, $defaultValue)
+    public function __construct($name, $type, $defaultValue = null)
     {
         $this->name = StringsUtil::toUnderscore($name);
         $this->type = $type;
