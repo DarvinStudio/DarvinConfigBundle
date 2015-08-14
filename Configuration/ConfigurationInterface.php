@@ -14,6 +14,11 @@ namespace Darvin\ConfigBundle\Configuration;
 interface ConfigurationInterface
 {
     /**
+     * @param \Darvin\ConfigBundle\Configuration\ConfigurationPool $configurationPool Configuration pool
+     */
+    public function setConfigurationPool(ConfigurationPool $configurationPool);
+
+    /**
      * @return \Darvin\ConfigBundle\Parameter\ParameterModel[]
      */
     public function getModel();

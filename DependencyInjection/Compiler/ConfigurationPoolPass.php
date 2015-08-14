@@ -17,6 +17,8 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class ConfigurationPoolPass implements CompilerPassInterface
 {
+    const POOL_ID = 'darvin_config.configuration.pool';
+
     const TAG_CONFIGURATION = 'darvin_config.configuration';
 
     /**
@@ -24,9 +26,21 @@ class ConfigurationPoolPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $pool = $container->getDefinition('darvin_config.configuration.pool');
+        $configurationIds = $container->findTaggedServiceIds(self::TAG_CONFIGURATION);
 
-        foreach ($container->findTaggedServiceIds(self::TAG_CONFIGURATION) as $id => $attr) {
+        if (empty($configurationIds)) {
+            return;
+        }
+
+        $pool = $container->getDefinition(self::POOL_ID);
+        $poolReference = new Reference(self::POOL_ID);
+
+        foreach ($configurationIds as $id => $attr) {
+            $configuration = $container->getDefinition($id);
+            $configuration->addMethodCall('setConfigurationPool', array(
+                $poolReference,
+            ));
+
             $pool->addMethodCall('add', array(
                 new Reference($id),
             ));

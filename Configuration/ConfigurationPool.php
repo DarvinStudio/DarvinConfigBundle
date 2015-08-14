@@ -53,17 +53,40 @@ class ConfigurationPool
             throw new ConfigurationException(sprintf('Configuration "%s" already added.', $configuration->getName()));
         }
 
+        $this->validateConfiguration($configuration);
+
         $this->configurations[$configuration->getName()] = $configuration;
     }
 
     /**
-     * @return \Darvin\ConfigBundle\Configuration\ConfigurationInterface[]
+     * Initializes configurations.
      */
-    public function getAll()
+    public function init()
     {
-        $this->init();
+        if ($this->initialized) {
+            return;
+        }
 
-        return $this->configurations;
+        $parameters = array();
+
+        foreach ($this->parameterRepository->getAll() as $parameter) {
+            $configurationName = $parameter->getConfigurationName();
+
+            if (!isset($parameters[$configurationName])) {
+                $parameters[$configurationName] = array();
+            }
+
+            $parameters[$configurationName][$parameter->getName()] = $parameter;
+        }
+        foreach ($this->configurations as $configuration) {
+            $configurationName = $configuration->getName();
+            $this->initConfiguration(
+                $configuration,
+                isset($parameters[$configurationName]) ? $parameters[$configurationName] : array()
+            );
+        }
+
+        $this->initialized = true;
     }
 
     /**
@@ -94,34 +117,6 @@ class ConfigurationPool
         $this->parameterRepository->save($parameters);
     }
 
-    private function init()
-    {
-        if ($this->initialized) {
-            return;
-        }
-
-        $parameters = array();
-
-        foreach ($this->parameterRepository->getAll() as $parameter) {
-            $configurationName = $parameter->getConfigurationName();
-
-            if (!isset($parameters[$configurationName])) {
-                $parameters[$configurationName] = array();
-            }
-
-            $parameters[$configurationName][$parameter->getName()] = $parameter;
-        }
-        foreach ($this->configurations as $configuration) {
-            $configurationName = $configuration->getName();
-            $this->initConfiguration(
-                $configuration,
-                isset($parameters[$configurationName]) ? $parameters[$configurationName] : array()
-            );
-        }
-
-        $this->initialized = true;
-    }
-
     /**
      * @param \Darvin\ConfigBundle\Configuration\ConfigurationInterface $configuration Configuration to initialize
      * @param \Darvin\ConfigBundle\Parameter\Parameter[]                $parameters    Configuration parameters
@@ -146,5 +141,31 @@ class ConfigurationPool
         }
 
         $configuration->setValues($values);
+    }
+
+    /**
+     * @param \Darvin\ConfigBundle\Configuration\ConfigurationInterface $configuration Configuration to validate
+     *
+     * @throws \Darvin\ConfigBundle\Configuration\ConfigurationException
+     */
+    private function validateConfiguration(ConfigurationInterface $configuration)
+    {
+        $parameterNames = array();
+
+        foreach ($configuration->getModel() as $parameterModel) {
+            $parameterName = $parameterModel->getName();
+
+            if (in_array($parameterName, $parameterNames)) {
+                $message = sprintf(
+                    'Parameter "%s" of configuration "%s" already defined.',
+                    $parameterName,
+                    $configuration->getName()
+                );
+
+                throw new ConfigurationException($message);
+            }
+
+            $parameterNames[] = $parameterName;
+        }
     }
 }

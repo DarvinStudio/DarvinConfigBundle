@@ -8,6 +8,8 @@
 
 namespace Darvin\ConfigBundle\Parameter;
 
+use Darvin\Utils\Strings\StringsUtil;
+
 /**
  * Configuration parameter model
  */
@@ -41,7 +43,7 @@ class ParameterModel
      */
     public function __construct($name, $type, $defaultValue)
     {
-        $this->name = $name;
+        $this->name = StringsUtil::toUnderscore($name);
         $this->type = $type;
         $this->defaultValue = $defaultValue;
     }
