@@ -70,6 +70,8 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      */
     public function __set($parameterName, $parameterValue)
     {
+        $parameterName = StringsUtil::toUnderscore($parameterName);
+
         if (!array_key_exists($parameterName, $this->values)) {
             throw new ConfigurationException(
                 sprintf('Parameter "%s" is not defined in configuration "%s".', $parameterName, $this->getName())
@@ -87,6 +89,8 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      */
     public function __get($parameterName)
     {
+        $parameterName = StringsUtil::toUnderscore($parameterName);
+
         if (!array_key_exists($parameterName, $this->values)) {
             throw new ConfigurationException(
                 sprintf('Parameter "%s" is not defined in configuration "%s".', $parameterName, $this->getName())
