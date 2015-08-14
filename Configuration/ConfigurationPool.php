@@ -187,6 +187,18 @@ class ConfigurationPool
             $parameterType = $parameterModel->getType();
             $parameterDefaultValue = $parameterModel->getDefaultValue();
 
+            if (!ParameterModel::isTypeExists($parameterType)) {
+                $message = sprintf(
+                    'Type "%s" of "%s" configuration parameter "%s" is not supported. Supported types: "%s".',
+                    $parameterType,
+                    $configuration->getName(),
+                    $parameterName,
+                    implode('", "', ParameterModel::getTypes())
+                );
+
+                throw new ConfigurationException($message);
+            }
+
             $checkTypeCallback = self::$checkTypeCallbacks[$parameterType];
 
             if (null !== $parameterDefaultValue && !$checkTypeCallback($parameterDefaultValue)) {

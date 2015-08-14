@@ -22,6 +22,17 @@ class ParameterModel
     const TYPE_STRING  = 'string';
 
     /**
+     * @var array
+     */
+    private static $types = array(
+        self::TYPE_ARRAY,
+        self::TYPE_BOOL,
+        self::TYPE_FLOAT,
+        self::TYPE_INTEGER,
+        self::TYPE_STRING,
+    );
+
+    /**
      * @var string
      */
     private $name;
@@ -46,6 +57,24 @@ class ParameterModel
         $this->name = StringsUtil::toUnderscore($name);
         $this->type = $type;
         $this->defaultValue = $defaultValue;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getTypes()
+    {
+        return self::$types;
+    }
+
+    /**
+     * @param string $type Type
+     *
+     * @return bool
+     */
+    public static function isTypeExists($type)
+    {
+        return in_array($type, self::$types);
     }
 
     /**
