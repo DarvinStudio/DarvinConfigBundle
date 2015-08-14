@@ -73,7 +73,7 @@ class ConfigurationPool
     {
         $parameters = array();
 
-        $valueConverter = new ParameterValueConverter();
+        $parameterValueConverter = new ParameterValueConverter();
 
         foreach ($this->configurations as $configurationName => $configuration) {
             $values = $configuration->getValues();
@@ -85,7 +85,7 @@ class ConfigurationPool
                 $value = array_key_exists($parameterName, $values)
                     ? $values[$parameterName]
                     : $parameterModel->getDefaultValue();
-                $value = $valueConverter->toString($value, $parameterType);
+                $value = $parameterValueConverter->toString($value, $parameterType);
 
                 $parameters[] = new Parameter($configurationName, $parameterName, $parameterType, $value);
             }
@@ -99,8 +99,24 @@ class ConfigurationPool
         if ($this->initialized) {
             return;
         }
+
+        $parameters = array();
+
+        foreach ($this->parameterRepository->getAll() as $parameter) {
+            $configurationName = $parameter->getConfigurationName();
+
+            if (!isset($parameters[$configurationName])) {
+                $parameters[$configurationName] = array();
+            }
+
+            $parameters[$configurationName][$parameter->getName()] = $parameter;
+        }
         foreach ($this->configurations as $configuration) {
-            $this->initConfiguration($configuration);
+            $configurationName = $configuration->getName();
+            $this->initConfiguration(
+                $configuration,
+                isset($parameters[$configurationName]) ? $parameters[$configurationName] : array()
+            );
         }
 
         $this->initialized = true;
@@ -108,13 +124,25 @@ class ConfigurationPool
 
     /**
      * @param \Darvin\ConfigBundle\Configuration\ConfigurationInterface $configuration Configuration to initialize
+     * @param \Darvin\ConfigBundle\Parameter\Parameter[]                $parameters    Configuration parameters
      */
-    private function initConfiguration(ConfigurationInterface $configuration)
+    private function initConfiguration(ConfigurationInterface $configuration, array $parameters)
     {
         $values = array();
 
+        $parameterValueConverter = new ParameterValueConverter();
+
         foreach ($configuration->getModel() as $parameterModel) {
-            $values[$parameterModel->getName()] = $parameterModel->getDefaultValue();
+            $parameterName = $parameterModel->getName();
+
+            if (isset($parameters[$parameterName])) {
+                $parameter = $parameters[$parameterName];
+                $value = $parameter->getValue();
+            } else {
+                $value = $parameterModel->getDefaultValue();
+            }
+
+            $values[$parameterName] = $parameterValueConverter->fromString($value, $parameterModel->getType());
         }
 
         $configuration->setValues($values);
