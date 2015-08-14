@@ -16,14 +16,14 @@ use Darvin\Utils\Strings\StringsUtil;
 abstract class AbstractConfiguration implements ConfigurationInterface
 {
     /**
-     * @var \Darvin\ConfigBundle\Configuration\ConfigurationPool
-     */
-    private $configurationPool;
-
-    /**
      * @var array
      */
     private $values;
+
+    /**
+     * @var \Darvin\ConfigBundle\Configuration\ConfigurationPool
+     */
+    private $configurationPool;
 
     /**
      * Constructor
