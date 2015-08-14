@@ -70,6 +70,6 @@ class ParameterValueConverter
 
         $callback = $convertCallbacks[$type];
 
-        return $callback[$value];
+        return $callback($value);
     }
 }
