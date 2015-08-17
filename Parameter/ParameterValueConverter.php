@@ -14,26 +14,6 @@ namespace Darvin\ConfigBundle\Parameter;
 class ParameterValueConverter
 {
     /**
-     * @var array
-     */
-    private static $fromStringCallbacks = array(
-        ParameterModel::TYPE_ARRAY   => 'json_decode',
-        ParameterModel::TYPE_BOOL    => 'boolval',
-        ParameterModel::TYPE_FLOAT   => 'floatval',
-        ParameterModel::TYPE_INTEGER => 'intval',
-    );
-
-    /**
-     * @var array
-     */
-    private static $toStringCallbacks = array(
-        ParameterModel::TYPE_ARRAY   => 'json_encode',
-        ParameterModel::TYPE_BOOL    => 'strval',
-        ParameterModel::TYPE_FLOAT   => 'strval',
-        ParameterModel::TYPE_INTEGER => 'strval',
-    );
-
-    /**
      * @param string $value Parameter value
      * @param string $type  Parameter type
      *
@@ -41,7 +21,7 @@ class ParameterValueConverter
      */
     public static function fromString($value, $type)
     {
-        return self::convert($value, $type, self::$fromStringCallbacks);
+        return self::convert($value, $type, self::getFromStringCallbacks());
     }
 
     /**
@@ -52,7 +32,7 @@ class ParameterValueConverter
      */
     public static function toString($value, $type)
     {
-        return self::convert($value, $type, self::$toStringCallbacks);
+        return self::convert($value, $type, self::getToStringCallbacks());
     }
 
     /**
@@ -74,5 +54,33 @@ class ParameterValueConverter
         $callback = $convertCallbacks[$type];
 
         return $callback($value);
+    }
+
+    /**
+     * @return array
+     */
+    private static function getFromStringCallbacks()
+    {
+        return array(
+            ParameterModel::TYPE_ARRAY   => function ($string) {
+                return json_decode($string, true);
+            },
+            ParameterModel::TYPE_BOOL    => 'boolval',
+            ParameterModel::TYPE_FLOAT   => 'floatval',
+            ParameterModel::TYPE_INTEGER => 'intval',
+        );
+    }
+
+    /**
+     * @return array
+     */
+    private static function getToStringCallbacks()
+    {
+        return array(
+            ParameterModel::TYPE_ARRAY   => 'json_encode',
+            ParameterModel::TYPE_BOOL    => 'strval',
+            ParameterModel::TYPE_FLOAT   => 'strval',
+            ParameterModel::TYPE_INTEGER => 'strval',
+        );
     }
 }
