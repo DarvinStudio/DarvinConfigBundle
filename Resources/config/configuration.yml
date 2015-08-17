@@ -1,8 +1,18 @@
 parameters:
+    darvin_config.configuration.form_type.configurations.class: Darvin\ConfigBundle\Form\Type\Configuration\ConfigurationsType
+
     darvin_config.configuration.pool.class: Darvin\ConfigBundle\Configuration\ConfigurationPool
 
 services:
+    darvin_config.configuration.form_type.configurations:
+        class: %darvin_config.configuration.form_type.configurations.class%
+        arguments:
+            - "@darvin_config.configuration.pool"
+        tags:
+            - { name: form.type, alias: darvin_config_configurations }
+
     darvin_config.configuration.pool:
         class: %darvin_config.configuration.pool.class%
         arguments:
             - "@darvin_config.parameter.repository"
+
