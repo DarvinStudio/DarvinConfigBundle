@@ -62,9 +62,7 @@ class ParameterValueConverter
     private static function getFromStringCallbacks()
     {
         return array(
-            ParameterModel::TYPE_ARRAY   => function ($string) {
-                return json_decode($string, true);
-            },
+            ParameterModel::TYPE_ARRAY   => 'unserialize',
             ParameterModel::TYPE_BOOL    => 'boolval',
             ParameterModel::TYPE_FLOAT   => 'floatval',
             ParameterModel::TYPE_INTEGER => 'intval',
@@ -77,7 +75,7 @@ class ParameterValueConverter
     private static function getToStringCallbacks()
     {
         return array(
-            ParameterModel::TYPE_ARRAY   => 'json_encode',
+            ParameterModel::TYPE_ARRAY   => 'serialize',
             ParameterModel::TYPE_BOOL    => 'strval',
             ParameterModel::TYPE_FLOAT   => 'strval',
             ParameterModel::TYPE_INTEGER => 'strval',
