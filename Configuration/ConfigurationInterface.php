@@ -41,6 +41,11 @@ interface ConfigurationInterface
     public function getValues();
 
     /**
+     * @return array
+     */
+    public function getAllowedRoles();
+
+    /**
      * @return string
      */
     public function getName();

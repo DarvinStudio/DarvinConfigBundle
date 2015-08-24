@@ -1,0 +1,8 @@
+parameters:
+    darvin_config.security.configuration_authorization_checker.class: Darvin\ConfigBundle\Security\Authorization\ConfigurationAuthorizationChecker
+
+services:
+    darvin_config.security.configuration_authorization_checker:
+        class: %darvin_config.security.configuration_authorization_checker.class%
+        arguments:
+            - "@darvin_utils.security.authorization_checker_provider"

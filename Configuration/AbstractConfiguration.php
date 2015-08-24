@@ -133,4 +133,12 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     {
         return $this->values;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAllowedRoles()
+    {
+        return array();
+    }
 }

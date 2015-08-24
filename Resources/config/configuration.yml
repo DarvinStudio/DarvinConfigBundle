@@ -14,5 +14,6 @@ services:
     darvin_config.configuration.pool:
         class: %darvin_config.configuration.pool.class%
         arguments:
+            - "@darvin_config.security.configuration_authorization_checker"
             - "@darvin_config.parameter.repository"
 
