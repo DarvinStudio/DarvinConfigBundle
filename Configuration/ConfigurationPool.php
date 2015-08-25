@@ -14,18 +14,12 @@ use Darvin\ConfigBundle\Parameter\Parameter;
 use Darvin\ConfigBundle\Parameter\ParameterModel;
 use Darvin\ConfigBundle\Parameter\ParameterValueConverter;
 use Darvin\ConfigBundle\Repository\ParameterRepositoryInterface;
-use Darvin\ConfigBundle\Security\Authorization\ConfigurationAuthorizationChecker;
 
 /**
  * Configuration pool
  */
 class ConfigurationPool
 {
-    /**
-     * @var \Darvin\ConfigBundle\Security\Authorization\ConfigurationAuthorizationChecker
-     */
-    private $configurationAuthorizationChecker;
-
     /**
      * @var \Darvin\ConfigBundle\Repository\ParameterRepositoryInterface
      */
@@ -42,14 +36,10 @@ class ConfigurationPool
     private $initialized;
 
     /**
-     * @param \Darvin\ConfigBundle\Security\Authorization\ConfigurationAuthorizationChecker $configurationAuthorizationChecker Configuration authorization checker
-     * @param \Darvin\ConfigBundle\Repository\ParameterRepositoryInterface                  $parameterRepository               Configuration parameter repository
+     * @param \Darvin\ConfigBundle\Repository\ParameterRepositoryInterface $parameterRepository Configuration parameter repository
      */
-    public function __construct(
-        ConfigurationAuthorizationChecker $configurationAuthorizationChecker,
-        ParameterRepositoryInterface $parameterRepository
-    ) {
-        $this->configurationAuthorizationChecker = $configurationAuthorizationChecker;
+    public function __construct(ParameterRepositoryInterface $parameterRepository)
+    {
         $this->parameterRepository = $parameterRepository;
         $this->configurations = array();
         $this->initialized = false;
@@ -142,13 +132,7 @@ class ConfigurationPool
 
             $parameters[$configurationName][$parameter->getName()] = $parameter;
         }
-        foreach ($this->configurations as $name => $configuration) {
-            if (!$this->configurationAuthorizationChecker->isAccessible($configuration)) {
-                unset($this->configurations[$name]);
-
-                continue;
-            }
-
+        foreach ($this->configurations as $configuration) {
             $configurationName = $configuration->getName();
             $this->initConfiguration(
                 $configuration,
