@@ -79,7 +79,7 @@ class ConfigurationType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => get_class($this->configuration),
-            'intention'  => md5(__FILE__.$this->configuration->getName()),
+            'intention'  => md5(__FILE__.$this->getName().$this->configuration->getName()),
         ));
     }
 
