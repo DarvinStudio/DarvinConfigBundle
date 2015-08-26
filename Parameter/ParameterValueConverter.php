@@ -21,9 +21,9 @@ class ParameterValueConverter
      *
      * @return mixed
      */
-    public static function fromString($value, $type)
+    public function fromString($value, $type)
     {
-        return self::convert($value, $type, self::getFromStringCallbacks());
+        return $this->convert($value, $type, self::getFromStringCallbacks());
     }
 
     /**
@@ -32,9 +32,9 @@ class ParameterValueConverter
      *
      * @return string
      */
-    public static function toString($value, $type)
+    public function toString($value, $type)
     {
-        return self::convert($value, $type, self::getToStringCallbacks());
+        return $this->convert($value, $type, self::getToStringCallbacks());
     }
 
     /**
@@ -44,7 +44,7 @@ class ParameterValueConverter
      *
      * @return mixed
      */
-    private static function convert($value, $type, array $convertCallbacks)
+    private function convert($value, $type, array $convertCallbacks)
     {
         if (null === $value) {
             return $value;

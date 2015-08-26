@@ -26,6 +26,11 @@ class ConfigurationPool
     private $parameterRepository;
 
     /**
+     * @var \Darvin\ConfigBundle\Parameter\ParameterValueConverter
+     */
+    private $parameterValueConverter;
+
+    /**
      * @var \Darvin\ConfigBundle\Configuration\ConfigurationInterface[]
      */
     private $configurations;
@@ -36,11 +41,15 @@ class ConfigurationPool
     private $initialized;
 
     /**
-     * @param \Darvin\ConfigBundle\Repository\ParameterRepositoryInterface $parameterRepository Configuration parameter repository
+     * @param \Darvin\ConfigBundle\Repository\ParameterRepositoryInterface $parameterRepository     Configuration parameter repository
+     * @param \Darvin\ConfigBundle\Parameter\ParameterValueConverter       $parameterValueConverter Parameter value converter
      */
-    public function __construct(ParameterRepositoryInterface $parameterRepository)
-    {
+    public function __construct(
+        ParameterRepositoryInterface $parameterRepository,
+        ParameterValueConverter $parameterValueConverter
+    ) {
         $this->parameterRepository = $parameterRepository;
+        $this->parameterValueConverter = $parameterValueConverter;
         $this->configurations = array();
         $this->initialized = false;
     }
@@ -177,7 +186,7 @@ class ConfigurationPool
                 $value = $parameterModel->getDefaultValue();
             }
 
-            $value = ParameterValueConverter::toString($value, $parameterType);
+            $value = $this->parameterValueConverter->toString($value, $parameterType);
 
             $parameters[] = new Parameter($configuration->getName(), $parameterName, $parameterType, $value);
         }
@@ -203,7 +212,10 @@ class ConfigurationPool
             }
 
             $parameter = $parameters[$parameterName];
-            $values[$parameterName] = ParameterValueConverter::fromString($parameter->getValue(), $parameterModel->getType());
+            $values[$parameterName] = $this->parameterValueConverter->fromString(
+                $parameter->getValue(),
+                $parameterModel->getType()
+            );
         }
 
         $configuration->setValues($values);
