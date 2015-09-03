@@ -28,6 +28,7 @@ class ConfigurationType extends AbstractType
     private static $fieldTypes = array(
         ParameterModel::TYPE_ARRAY   => 'collection',
         ParameterModel::TYPE_BOOL    => 'checkbox',
+        ParameterModel::TYPE_ENTITY  => 'entity',
         ParameterModel::TYPE_FLOAT   => 'number',
         ParameterModel::TYPE_INTEGER => 'integer',
     );
@@ -132,6 +133,9 @@ class ConfigurationType extends AbstractType
                 $this->configuration->getName(),
                 $parameterModel->getName()
             );
+        }
+        if (ParameterModel::TYPE_ENTITY === $parameterModel->getType() && !isset($fieldOptions['class'])) {
+            $fieldOptions['class'] = $parameterOptions['class'];
         }
 
         return $fieldOptions;

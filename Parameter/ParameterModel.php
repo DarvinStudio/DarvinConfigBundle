@@ -10,6 +10,7 @@
 
 namespace Darvin\ConfigBundle\Parameter;
 
+use Darvin\ConfigBundle\Configuration\ConfigurationException;
 use Darvin\Utils\Strings\StringsUtil;
 
 /**
@@ -18,10 +19,32 @@ use Darvin\Utils\Strings\StringsUtil;
 class ParameterModel
 {
     const TYPE_ARRAY   = 'array';
-    const TYPE_BOOL    = 'boolean';
-    const TYPE_FLOAT   = 'double';
+    const TYPE_BOOL    = 'bool';
+    const TYPE_ENTITY  = 'entity';
+    const TYPE_FLOAT   = 'float';
     const TYPE_INTEGER = 'integer';
     const TYPE_STRING  = 'string';
+
+    /**
+     * @var array
+     */
+    private static $dataTypes = array(
+        self::TYPE_ARRAY   => 'array',
+        self::TYPE_BOOL    => 'boolean',
+        self::TYPE_ENTITY  => 'object',
+        self::TYPE_FLOAT   => 'double',
+        self::TYPE_INTEGER => 'integer',
+        self::TYPE_STRING  => 'string',
+    );
+
+    /**
+     * @var array
+     */
+    private static $requiredOptions = array(
+        self::TYPE_ENTITY => array(
+            'class',
+        ),
+    );
 
     /**
      * @var array
@@ -29,6 +52,7 @@ class ParameterModel
     private static $types = array(
         self::TYPE_ARRAY,
         self::TYPE_BOOL,
+        self::TYPE_ENTITY,
         self::TYPE_FLOAT,
         self::TYPE_INTEGER,
         self::TYPE_STRING,
@@ -62,10 +86,20 @@ class ParameterModel
      */
     public function __construct($name, $type, $defaultValue = null, array $options = array())
     {
+        $this->validateOptions($options, $type);
+
         $this->name = StringsUtil::toUnderscore($name);
         $this->type = $type;
         $this->defaultValue = $defaultValue;
         $this->options = $options;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataType()
+    {
+        return self::$dataTypes[$this->type];
     }
 
     /**
@@ -152,5 +186,25 @@ class ParameterModel
     public function getOptions()
     {
         return $this->options;
+    }
+
+    /**
+     * @param array  $options Options
+     * @param string $type    Parameter type
+     *
+     * @throws \Darvin\ConfigBundle\Configuration\ConfigurationException
+     */
+    private function validateOptions(array $options, $type)
+    {
+        if (!isset(self::$requiredOptions[$type])) {
+            return;
+        }
+        foreach (self::$requiredOptions[$type] as $requiredOption) {
+            if (!array_key_exists($requiredOption, $options)) {
+                throw new ConfigurationException(
+                    sprintf('Option "%s" must be provided for "%s" type parameters.', $requiredOption, $type)
+                );
+            }
+        }
     }
 }

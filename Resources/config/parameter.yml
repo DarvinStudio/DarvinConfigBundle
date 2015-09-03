@@ -13,3 +13,5 @@ services:
 
     darvin_config.parameter.value_converter:
         class: %darvin_config.parameter.value_converter.class%
+        arguments:
+            - "@doctrine.orm.entity_manager"

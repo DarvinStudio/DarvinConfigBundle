@@ -167,16 +167,17 @@ class ConfigurationPool
         foreach ($configuration->getModel() as $parameterModel) {
             $parameterName = $parameterModel->getName();
             $parameterType = $parameterModel->getType();
+            $parameterDataType = $parameterModel->getDataType();
 
             if (array_key_exists($parameterName, $values)) {
                 $value = $values[$parameterName];
 
-                if (null !== $value && gettype($value) !== $parameterType) {
+                if (null !== $value && gettype($value) !== $parameterDataType) {
                     $message = sprintf(
                         'Parameter "%s" of configuration "%s" must have value of "%s" type, "%s" type value provided.',
                         $parameterName,
                         $configuration->getName(),
-                        $parameterType,
+                        $parameterDataType,
                         gettype($value)
                     );
 
@@ -186,7 +187,7 @@ class ConfigurationPool
                 $value = $parameterModel->getDefaultValue();
             }
 
-            $value = $this->parameterValueConverter->toString($value, $parameterType);
+            $value = $this->parameterValueConverter->toString($value, $parameterType, $parameterModel->getOptions());
 
             $parameters[] = new Parameter($configuration->getName(), $parameterName, $parameterType, $value);
         }
@@ -214,7 +215,8 @@ class ConfigurationPool
             $parameter = $parameters[$parameterName];
             $values[$parameterName] = $this->parameterValueConverter->fromString(
                 $parameter->getValue(),
-                $parameterModel->getType()
+                $parameterModel->getType(),
+                $parameterModel->getOptions()
             );
         }
 
@@ -234,13 +236,14 @@ class ConfigurationPool
             $parameterName = $parameterModel->getName();
             $parameterType = $parameterModel->getType();
             $parameterDefaultValue = $parameterModel->getDefaultValue();
+            $parameterDataType = $parameterModel->getDataType();
 
-            if (null !== $parameterDefaultValue && gettype($parameterDefaultValue) !== $parameterType) {
+            if (null !== $parameterDefaultValue && gettype($parameterDefaultValue) !== $parameterDataType) {
                 $message = sprintf(
                     'Parameter "%s" of configuration "%s" must have default value of "%s" type, "%s" type value provided.',
                     $parameterName,
                     $configuration->getName(),
-                    $parameterType,
+                    $parameterDataType,
                     gettype($parameterDefaultValue)
                 );
 
