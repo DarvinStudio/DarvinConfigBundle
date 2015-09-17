@@ -10,7 +10,7 @@
 
 namespace Darvin\ConfigBundle;
 
-use Darvin\ConfigBundle\DependencyInjection\Compiler\ConfigurationPoolPass;
+use Darvin\ConfigBundle\DependencyInjection\Compiler\AddConfigurationsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -26,6 +26,6 @@ class DarvinConfigBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new ConfigurationPoolPass());
+        $container->addCompilerPass(new AddConfigurationsPass());
     }
 }
