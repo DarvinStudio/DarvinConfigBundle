@@ -39,8 +39,8 @@ class AddConfigurationsPass implements CompilerPassInterface
             return;
         }
 
-        $taggedServiceIdsSorter = new TaggedServiceIdsSorter();
-        $taggedServiceIdsSorter->sort($configurationIds);
+        $sorter = new TaggedServiceIdsSorter();
+        $sorter->sort($configurationIds);
 
         $poolDefinition = $container->getDefinition(self::POOL_ID);
         $poolReference = new Reference(self::POOL_ID);
