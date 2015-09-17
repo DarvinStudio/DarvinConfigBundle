@@ -29,6 +29,10 @@ class AddConfigurationsPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
+        if (!$container->hasDefinition(self::POOL_ID)) {
+            return;
+        }
+
         $configurationIds = $container->findTaggedServiceIds(self::TAG_CONFIGURATION);
 
         if (empty($configurationIds)) {
