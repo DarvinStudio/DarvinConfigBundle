@@ -18,7 +18,7 @@ interface ParameterRepositoryInterface
     /**
      * @return \Darvin\ConfigBundle\Parameter\Parameter[]
      */
-    public function getAll();
+    public function getAllParameters();
 
     /**
      * @param \Darvin\ConfigBundle\Parameter\Parameter[] $parameters Configuration parameters

@@ -74,7 +74,7 @@ class ConfigurationPool
      *
      * @throws \Darvin\ConfigBundle\Configuration\ConfigurationException
      */
-    public function add(ConfigurationInterface $configuration)
+    public function addConfiguration(ConfigurationInterface $configuration)
     {
         if (isset($this->configurations[$configuration->getName()])) {
             throw new ConfigurationException(sprintf('Configuration "%s" already added.', $configuration->getName()));
@@ -88,7 +88,7 @@ class ConfigurationPool
     /**
      * @return \Darvin\ConfigBundle\Configuration\ConfigurationInterface[]
      */
-    public function getAll()
+    public function getAllConfiguration()
     {
         $this->init();
 
@@ -132,7 +132,7 @@ class ConfigurationPool
 
         $parameters = array();
 
-        foreach ($this->parameterRepository->getAll() as $parameter) {
+        foreach ($this->parameterRepository->getAllParameters() as $parameter) {
             $configurationName = $parameter->getConfigurationName();
 
             if (!isset($parameters[$configurationName])) {

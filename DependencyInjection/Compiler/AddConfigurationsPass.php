@@ -51,7 +51,7 @@ class AddConfigurationsPass implements CompilerPassInterface
                 $poolReference,
             ));
 
-            $poolDefinition->addMethodCall('add', array(
+            $poolDefinition->addMethodCall('addConfiguration', array(
                 new Reference($id),
             ));
         }

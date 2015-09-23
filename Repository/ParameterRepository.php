@@ -23,7 +23,7 @@ class ParameterRepository extends EntityRepository implements ParameterRepositor
     /**
      * {@inheritdoc}
      */
-    public function getAll()
+    public function getAllParameters()
     {
         return array_map(function (ParameterEntity $parameterEntity) {
             return $parameterEntity->toParameter();
