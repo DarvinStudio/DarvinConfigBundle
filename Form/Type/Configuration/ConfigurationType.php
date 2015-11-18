@@ -26,11 +26,11 @@ class ConfigurationType extends AbstractType
      * @var array
      */
     private static $fieldTypes = array(
-        ParameterModel::TYPE_ARRAY   => 'Symfony\\Component\\Form\\Extension\\Core\\Type\\CollectionType',
-        ParameterModel::TYPE_BOOL    => 'Symfony\\Component\\Form\\Extension\\Core\\Type\\CheckboxType',
-        ParameterModel::TYPE_ENTITY  => 'Symfony\\Bridge\\Doctrine\\Form\\Type\\EntityType',
-        ParameterModel::TYPE_FLOAT   => 'Symfony\\Component\\Form\\Extension\\Core\\Type\\NumberType',
-        ParameterModel::TYPE_INTEGER => 'Symfony\\Component\\Form\\Extension\\Core\\Type\\IntegerType',
+        ParameterModel::TYPE_ARRAY   => 'Symfony\Component\Form\Extension\Core\Type\CollectionType',
+        ParameterModel::TYPE_BOOL    => 'Symfony\Component\Form\Extension\Core\Type\CheckboxType',
+        ParameterModel::TYPE_ENTITY  => 'Symfony\Bridge\Doctrine\Form\Type\EntityType',
+        ParameterModel::TYPE_FLOAT   => 'Symfony\Component\Form\Extension\Core\Type\NumberType',
+        ParameterModel::TYPE_INTEGER => 'Symfony\Component\Form\Extension\Core\Type\IntegerType',
     );
 
     /**
