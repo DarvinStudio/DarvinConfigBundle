@@ -80,14 +80,14 @@ class ConfigurationType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => get_class($this->configuration),
-            'intention'  => md5(__FILE__.$this->getName().$this->configuration->getName()),
+            'intention'  => md5(__FILE__.$this->getBlockPrefix().$this->configuration->getName()),
         ));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'darvin_config_configuration';
     }
