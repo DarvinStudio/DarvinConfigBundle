@@ -22,6 +22,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ConfigurationType extends AbstractType
 {
+    const CONFIGURATION_TYPE_CLASS = __CLASS__;
+
     /**
      * @var array
      */
@@ -47,28 +49,17 @@ class ConfigurationType extends AbstractType
     );
 
     /**
-     * @var \Darvin\ConfigBundle\Configuration\ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
-     * @param \Darvin\ConfigBundle\Configuration\ConfigurationInterface $configuration Configuration
-     */
-    public function __construct(ConfigurationInterface $configuration)
-    {
-        $this->configuration = $configuration;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        foreach ($this->configuration->getModel() as $parameterModel) {
+        $configuration = $this->getConfiguration($options);
+
+        foreach ($configuration->getModel() as $parameterModel) {
             $builder->add(
                 lcfirst(StringsUtil::toCamelCase($parameterModel->getName())),
                 $this->getFieldType($parameterModel),
-                $this->getFieldOptions($parameterModel)
+                $this->getFieldOptions($parameterModel, $configuration)
             );
         }
     }
@@ -78,10 +69,17 @@ class ConfigurationType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => get_class($this->configuration),
-            'intention'  => md5(__FILE__.$this->getBlockPrefix().$this->configuration->getName()),
-        ));
+        $resolver
+            ->setDefaults(array(
+                'intention' => md5(__FILE__.$this->getBlockPrefix()),
+            ))
+            ->remove('data_class')
+            ->setRequired(array(
+                'configuration',
+                'data_class',
+            ))
+            ->setAllowedTypes('configuration', ConfigurationInterface::CONFIGURATION_INTERFACE)
+            ->setAllowedTypes('data_class', 'string');
     }
 
     /**
@@ -112,11 +110,12 @@ class ConfigurationType extends AbstractType
     }
 
     /**
-     * @param \Darvin\ConfigBundle\Parameter\ParameterModel $parameterModel Parameter model
+     * @param \Darvin\ConfigBundle\Parameter\ParameterModel             $parameterModel Parameter model
+     * @param \Darvin\ConfigBundle\Configuration\ConfigurationInterface $configuration  Configuration
      *
      * @return array
      */
-    private function getFieldOptions(ParameterModel $parameterModel)
+    private function getFieldOptions(ParameterModel $parameterModel, ConfigurationInterface $configuration)
     {
         $fieldOptions = array();
 
@@ -130,7 +129,7 @@ class ConfigurationType extends AbstractType
         if (!array_key_exists('label', $fieldOptions)) {
             $fieldOptions['label'] = sprintf(
                 'configuration.%s.parameter.%s',
-                $this->configuration->getName(),
+                $configuration->getName(),
                 $parameterModel->getName()
             );
         }
@@ -139,5 +138,15 @@ class ConfigurationType extends AbstractType
         }
 
         return $fieldOptions;
+    }
+
+    /**
+     * @param array $options Form options
+     *
+     * @return \Darvin\ConfigBundle\Configuration\ConfigurationInterface
+     */
+    private function getConfiguration(array $options)
+    {
+        return $options['configuration'];
     }
 }
