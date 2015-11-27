@@ -88,7 +88,7 @@ class ConfigurationPool
     /**
      * @return \Darvin\ConfigBundle\Configuration\ConfigurationInterface[]
      */
-    public function getAllConfiguration()
+    public function getAllConfigurations()
     {
         $this->init();
 
