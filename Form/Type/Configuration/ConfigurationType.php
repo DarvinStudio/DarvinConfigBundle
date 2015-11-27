@@ -27,22 +27,22 @@ class ConfigurationType extends AbstractType
     /**
      * @var array
      */
-    private static $fieldTypes = array(
-        ParameterModel::TYPE_ARRAY   => 'Symfony\Component\Form\Extension\Core\Type\CollectionType',
-        ParameterModel::TYPE_BOOL    => 'Symfony\Component\Form\Extension\Core\Type\CheckboxType',
-        ParameterModel::TYPE_ENTITY  => 'Symfony\Bridge\Doctrine\Form\Type\EntityType',
-        ParameterModel::TYPE_FLOAT   => 'Symfony\Component\Form\Extension\Core\Type\NumberType',
-        ParameterModel::TYPE_INTEGER => 'Symfony\Component\Form\Extension\Core\Type\IntegerType',
+    private static $defaultFieldOptions = array(
+        ParameterModel::TYPE_ARRAY => array(
+            'allow_add'    => true,
+            'allow_delete' => true,
+        ),
     );
 
     /**
      * @var array
      */
-    private static $fieldOptions = array(
-        ParameterModel::TYPE_ARRAY => array(
-            'allow_add'    => true,
-            'allow_delete' => true,
-        ),
+    private static $defaultFieldTypes = array(
+        ParameterModel::TYPE_ARRAY   => 'Symfony\Component\Form\Extension\Core\Type\CollectionType',
+        ParameterModel::TYPE_BOOL    => 'Symfony\Component\Form\Extension\Core\Type\CheckboxType',
+        ParameterModel::TYPE_ENTITY  => 'Symfony\Bridge\Doctrine\Form\Type\EntityType',
+        ParameterModel::TYPE_FLOAT   => 'Symfony\Component\Form\Extension\Core\Type\NumberType',
+        ParameterModel::TYPE_INTEGER => 'Symfony\Component\Form\Extension\Core\Type\IntegerType',
     );
 
     /**
@@ -99,8 +99,8 @@ class ConfigurationType extends AbstractType
         if (isset($parameterOptions['form']['type'])) {
             return $parameterOptions['form']['type'];
         }
-        if (isset(self::$fieldTypes[$parameterModel->getType()])) {
-            return self::$fieldTypes[$parameterModel->getType()];
+        if (isset(self::$defaultFieldTypes[$parameterModel->getType()])) {
+            return self::$defaultFieldTypes[$parameterModel->getType()];
         }
 
         return null;
@@ -118,12 +118,14 @@ class ConfigurationType extends AbstractType
             'required' => false,
         );
 
+        if (isset(self::$defaultFieldOptions[$parameterModel->getType()])) {
+            $fieldOptions = array_merge($fieldOptions, self::$defaultFieldOptions[$parameterModel->getType()]);
+        }
+
         $parameterOptions = $parameterModel->getOptions();
 
         if (isset($parameterOptions['form']['options'])) {
             $fieldOptions = array_merge($fieldOptions, $parameterOptions['form']['options']);
-        } elseif (isset(self::$fieldOptions[$parameterModel->getType()])) {
-            $fieldOptions = array_merge($fieldOptions, self::$fieldOptions[$parameterModel->getType()]);
         }
         if (!array_key_exists('label', $fieldOptions)) {
             $fieldOptions['label'] = sprintf(
