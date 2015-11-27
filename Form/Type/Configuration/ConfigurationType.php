@@ -27,16 +27,6 @@ class ConfigurationType extends AbstractType
     /**
      * @var array
      */
-    private static $defaultFieldOptions = array(
-        ParameterModel::TYPE_ARRAY => array(
-            'allow_add'    => true,
-            'allow_delete' => true,
-        ),
-    );
-
-    /**
-     * @var array
-     */
     private static $defaultFieldTypes = array(
         ParameterModel::TYPE_ARRAY   => 'Symfony\Component\Form\Extension\Core\Type\CollectionType',
         ParameterModel::TYPE_BOOL    => 'Symfony\Component\Form\Extension\Core\Type\CheckboxType',
@@ -117,10 +107,6 @@ class ConfigurationType extends AbstractType
         $fieldOptions = array(
             'required' => false,
         );
-
-        if (isset(self::$defaultFieldOptions[$parameterModel->getType()])) {
-            $fieldOptions = array_merge($fieldOptions, self::$defaultFieldOptions[$parameterModel->getType()]);
-        }
 
         $parameterOptions = $parameterModel->getOptions();
 
