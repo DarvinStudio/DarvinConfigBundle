@@ -66,7 +66,7 @@ class ParameterValueConverter
     private function convert($value, $type, array $options, array $convertCallbacks)
     {
         if (null === $value) {
-            return $value;
+            return ParameterModel::TYPE_STRING === $type ? '' : null;
         }
         if (!isset($convertCallbacks[$type])) {
             return $value;
