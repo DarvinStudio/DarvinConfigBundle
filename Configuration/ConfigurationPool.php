@@ -213,11 +213,14 @@ class ConfigurationPool
             }
 
             $parameter = $parameters[$parameterName];
-            $values[$parameterName] = $this->parameterValueConverter->fromString(
-                $parameter->getValue(),
-                $parameterModel->getType(),
-                $parameterModel->getOptions()
-            );
+
+            $values[$parameterName] = null !== $parameter->getValue()
+                ? $this->parameterValueConverter->fromString(
+                    $parameter->getValue(),
+                    $parameterModel->getType(),
+                    $parameterModel->getOptions()
+                )
+                : $parameterModel->getDefaultValue();
         }
 
         $configuration->setValues($values);
