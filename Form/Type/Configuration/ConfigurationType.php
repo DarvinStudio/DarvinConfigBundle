@@ -43,9 +43,6 @@ class ConfigurationType extends AbstractType
             'allow_add'    => true,
             'allow_delete' => true,
         ),
-        ParameterModel::TYPE_BOOL => array(
-            'required' => false,
-        ),
     );
 
     /**
@@ -117,14 +114,16 @@ class ConfigurationType extends AbstractType
      */
     private function getFieldOptions(ParameterModel $parameterModel, ConfigurationInterface $configuration)
     {
-        $fieldOptions = array();
+        $fieldOptions = array(
+            'required' => false,
+        );
 
         $parameterOptions = $parameterModel->getOptions();
 
         if (isset($parameterOptions['form']['options'])) {
-            $fieldOptions = $parameterOptions['form']['options'];
+            $fieldOptions = array_merge($fieldOptions, $parameterOptions['form']['options']);
         } elseif (isset(self::$fieldOptions[$parameterModel->getType()])) {
-            $fieldOptions = self::$fieldOptions[$parameterModel->getType()];
+            $fieldOptions = array_merge($fieldOptions, self::$fieldOptions[$parameterModel->getType()]);
         }
         if (!array_key_exists('label', $fieldOptions)) {
             $fieldOptions['label'] = sprintf(
