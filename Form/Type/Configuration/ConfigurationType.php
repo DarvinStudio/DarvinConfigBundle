@@ -58,7 +58,7 @@ class ConfigurationType extends AbstractType
     {
         $resolver
             ->setDefaults(array(
-                'intention' => md5(__FILE__.$this->getBlockPrefix()),
+                'csrf_token_id' => md5(__FILE__.$this->getBlockPrefix()),
             ))
             ->remove('data_class')
             ->setRequired(array(
