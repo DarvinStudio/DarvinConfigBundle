@@ -169,22 +169,25 @@ class ConfigurationPool
             $parameterType = $parameterModel->getType();
             $parameterDataType = $parameterModel->getDataType();
 
-            if (array_key_exists($parameterName, $values)) {
-                $value = $values[$parameterName];
+            if (!array_key_exists($parameterName, $values)) {
+                continue;
+            }
 
-                if (null !== $value && gettype($value) !== $parameterDataType) {
-                    $message = sprintf(
-                        'Parameter "%s" of configuration "%s" must have value of "%s" type, "%s" type value provided.',
-                        $parameterName,
-                        $configuration->getName(),
-                        $parameterDataType,
-                        gettype($value)
-                    );
+            $value = $values[$parameterName];
 
-                    throw new ConfigurationException($message);
-                }
-            } else {
-                $value = $parameterModel->getDefaultValue();
+            if ($value == $parameterModel->getDefaultValue()) {
+                continue;
+            }
+            if (null !== $value && gettype($value) !== $parameterDataType) {
+                $message = sprintf(
+                    'Parameter "%s" of configuration "%s" must have value of "%s" type, "%s" type value provided.',
+                    $parameterName,
+                    $configuration->getName(),
+                    $parameterDataType,
+                    gettype($value)
+                );
+
+                throw new ConfigurationException($message);
             }
 
             $value = $this->parameterValueConverter->toString($value, $parameterType, $parameterModel->getOptions());
