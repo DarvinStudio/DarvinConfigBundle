@@ -36,6 +36,11 @@ class ConfigurationPool
     private $configurations;
 
     /**
+     * @var \Darvin\ConfigBundle\Parameter\Parameter[]
+     */
+    private $persistedParameters;
+
+    /**
      * @var bool
      */
     private $initialized;
@@ -141,6 +146,9 @@ class ConfigurationPool
 
             $parameters[$configurationName][$parameter->getName()] = $parameter;
         }
+
+        $this->persistedParameters = $parameters;
+
         foreach ($this->configurations as $configuration) {
             $configurationName = $configuration->getName();
             $this->initConfiguration(
@@ -175,7 +183,9 @@ class ConfigurationPool
 
             $value = $values[$parameterName];
 
-            if ($value == $parameterModel->getDefaultValue()) {
+            if ($value == $parameterModel->getDefaultValue()
+                && !isset($this->persistedParameters[$configuration->getName()][$parameterName])
+            ) {
                 continue;
             }
             if (null !== $value && gettype($value) !== $parameterDataType) {
