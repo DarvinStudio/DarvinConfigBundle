@@ -72,6 +72,8 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      */
     public function __set($parameterName, $parameterValue)
     {
+        $this->configurationPool->init();
+
         $parameterName = StringsUtil::toUnderscore($parameterName);
 
         if (!array_key_exists($parameterName, $this->values)) {
@@ -91,6 +93,8 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      */
     public function __get($parameterName)
     {
+        $this->configurationPool->init();
+
         $parameterName = StringsUtil::toUnderscore($parameterName);
 
         if (!array_key_exists($parameterName, $this->values)) {
