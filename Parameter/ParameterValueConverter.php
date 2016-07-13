@@ -84,7 +84,7 @@ class ParameterValueConverter
     {
         $om = $this->om;
 
-        return array(
+        return [
             ParameterModel::TYPE_ARRAY   => 'unserialize',
             ParameterModel::TYPE_BOOL    => 'boolval',
             ParameterModel::TYPE_ENTITY  => function ($id, $options) use ($om) {
@@ -92,7 +92,7 @@ class ParameterValueConverter
             },
             ParameterModel::TYPE_FLOAT   => 'floatval',
             ParameterModel::TYPE_INTEGER => 'intval',
-        );
+        ];
     }
 
     /**
@@ -102,7 +102,7 @@ class ParameterValueConverter
     {
         $om = $this->om;
 
-        return array(
+        return [
             ParameterModel::TYPE_ARRAY   => 'serialize',
             ParameterModel::TYPE_BOOL    => 'strval',
             ParameterModel::TYPE_ENTITY  => function ($entity) use ($om) {
@@ -116,6 +116,6 @@ class ParameterValueConverter
             },
             ParameterModel::TYPE_FLOAT   => 'strval',
             ParameterModel::TYPE_INTEGER => 'strval',
-        );
+        ];
     }
 }

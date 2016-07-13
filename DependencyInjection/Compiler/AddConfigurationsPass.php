@@ -47,13 +47,15 @@ class AddConfigurationsPass implements CompilerPassInterface
 
         foreach ($configurationIds as $id => $attr) {
             $configurationDefinition = $container->getDefinition($id);
-            $configurationDefinition->addMethodCall('setConfigurationPool', array(
+            $configurationDefinition->addMethodCall('setConfigurationPool', [
                 $poolReference,
-            ));
+            ]
+            );
 
-            $poolDefinition->addMethodCall('addConfiguration', array(
+            $poolDefinition->addMethodCall('addConfiguration', [
                 new Reference($id),
-            ));
+            ]
+            );
         }
     }
 }

@@ -35,13 +35,13 @@ class ParameterRepository extends EntityRepository implements ParameterRepositor
      */
     public function save(array $parameters)
     {
-        $parameterEntities = array();
+        $parameterEntities = [];
 
         foreach ($this->findAll() as $parameterEntity) {
             $configurationName = $parameterEntity->getConfigurationName();
 
             if (!isset($parameterEntities[$configurationName])) {
-                $parameterEntities[$configurationName] = array();
+                $parameterEntities[$configurationName] = [];
             }
 
             $parameterEntities[$configurationName][$parameterEntity->getName()] = $parameterEntity;

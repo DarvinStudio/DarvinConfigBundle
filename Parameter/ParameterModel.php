@@ -28,35 +28,35 @@ class ParameterModel
     /**
      * @var array
      */
-    private static $dataTypes = array(
+    private static $dataTypes = [
         self::TYPE_ARRAY   => 'array',
         self::TYPE_BOOL    => 'boolean',
         self::TYPE_ENTITY  => 'object',
         self::TYPE_FLOAT   => 'double',
         self::TYPE_INTEGER => 'integer',
         self::TYPE_STRING  => 'string',
-    );
+    ];
 
     /**
      * @var array
      */
-    private static $requiredOptions = array(
-        self::TYPE_ENTITY => array(
+    private static $requiredOptions = [
+        self::TYPE_ENTITY => [
             'class',
-        ),
-    );
+        ],
+    ];
 
     /**
      * @var array
      */
-    private static $types = array(
+    private static $types = [
         self::TYPE_ARRAY,
         self::TYPE_BOOL,
         self::TYPE_ENTITY,
         self::TYPE_FLOAT,
         self::TYPE_INTEGER,
         self::TYPE_STRING,
-    );
+    ];
 
     /**
      * @var string
@@ -84,7 +84,7 @@ class ParameterModel
      * @param mixed  $defaultValue Default value
      * @param array  $options      Options
      */
-    public function __construct($name, $type, $defaultValue = null, array $options = array())
+    public function __construct($name, $type, $defaultValue = null, array $options = [])
     {
         $this->validateOptions($options, $type);
 

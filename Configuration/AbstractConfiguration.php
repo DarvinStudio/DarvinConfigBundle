@@ -32,7 +32,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      */
     public function __construct()
     {
-        $this->values = array();
+        $this->values = [];
     }
 
     /**
@@ -42,7 +42,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      * @return mixed
      * @throws \Darvin\ConfigBundle\Configuration\ConfigurationException
      */
-    public function __call($method, array $arguments = array())
+    public function __call($method, array $arguments = [])
     {
         $this->configurationPool->init();
 

@@ -55,7 +55,7 @@ class ConfigurationPool
     ) {
         $this->parameterRepository = $parameterRepository;
         $this->parameterValueConverter = $parameterValueConverter;
-        $this->configurations = array();
+        $this->configurations = [];
         $this->initialized = false;
     }
 
@@ -107,7 +107,7 @@ class ConfigurationPool
     {
         $this->init();
 
-        $parameters = array();
+        $parameters = [];
 
         foreach ($this->configurations as $configuration) {
             $parameters = array_merge($parameters, $this->getConfigurationParameters($configuration));
@@ -135,13 +135,13 @@ class ConfigurationPool
             return;
         }
 
-        $parameters = array();
+        $parameters = [];
 
         foreach ($this->parameterRepository->getAllParameters() as $parameter) {
             $configurationName = $parameter->getConfigurationName();
 
             if (!isset($parameters[$configurationName])) {
-                $parameters[$configurationName] = array();
+                $parameters[$configurationName] = [];
             }
 
             $parameters[$configurationName][$parameter->getName()] = $parameter;
@@ -153,7 +153,7 @@ class ConfigurationPool
             $configurationName = $configuration->getName();
             $this->initConfiguration(
                 $configuration,
-                isset($parameters[$configurationName]) ? $parameters[$configurationName] : array()
+                isset($parameters[$configurationName]) ? $parameters[$configurationName] : []
             );
         }
 
@@ -168,7 +168,7 @@ class ConfigurationPool
      */
     private function getConfigurationParameters(ConfigurationInterface $configuration)
     {
-        $parameters = array();
+        $parameters = [];
 
         $values = $configuration->getValues();
 
@@ -214,7 +214,7 @@ class ConfigurationPool
      */
     private function initConfiguration(ConfigurationInterface $configuration, array $parameters)
     {
-        $values = array();
+        $values = [];
 
         foreach ($configuration->getModel() as $parameterModel) {
             $parameterName = $parameterModel->getName();
@@ -246,7 +246,7 @@ class ConfigurationPool
      */
     private function validateConfiguration(ConfigurationInterface $configuration)
     {
-        $parameterNames = array();
+        $parameterNames = [];
 
         foreach ($configuration->getModel() as $parameterModel) {
             $parameterName = $parameterModel->getName();

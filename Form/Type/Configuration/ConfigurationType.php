@@ -27,13 +27,13 @@ class ConfigurationType extends AbstractType
     /**
      * @var array
      */
-    private static $defaultFieldTypes = array(
+    private static $defaultFieldTypes = [
         ParameterModel::TYPE_ARRAY   => 'Symfony\Component\Form\Extension\Core\Type\CollectionType',
         ParameterModel::TYPE_BOOL    => 'Symfony\Component\Form\Extension\Core\Type\CheckboxType',
         ParameterModel::TYPE_ENTITY  => 'Symfony\Bridge\Doctrine\Form\Type\EntityType',
         ParameterModel::TYPE_FLOAT   => 'Symfony\Component\Form\Extension\Core\Type\NumberType',
         ParameterModel::TYPE_INTEGER => 'Symfony\Component\Form\Extension\Core\Type\IntegerType',
-    );
+    ];
 
     /**
      * {@inheritdoc}
@@ -57,14 +57,18 @@ class ConfigurationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setDefaults(array(
+            ->setDefaults(
+                [
                 'csrf_token_id' => md5(__FILE__.$this->getBlockPrefix()),
-            ))
+                ]
+            )
             ->remove('data_class')
-            ->setRequired(array(
+            ->setRequired(
+                [
                 'configuration',
                 'data_class',
-            ))
+                ]
+            )
             ->setAllowedTypes('configuration', ConfigurationInterface::CONFIGURATION_INTERFACE)
             ->setAllowedTypes('data_class', 'string');
     }
@@ -104,9 +108,9 @@ class ConfigurationType extends AbstractType
      */
     private function getFieldOptions(ParameterModel $parameterModel, ConfigurationInterface $configuration)
     {
-        $fieldOptions = array(
+        $fieldOptions = [
             'required' => false,
-        );
+        ];
 
         $parameterOptions = $parameterModel->getOptions();
 
