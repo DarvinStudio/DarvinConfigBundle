@@ -49,13 +49,11 @@ class AddConfigurationsPass implements CompilerPassInterface
             $configurationDefinition = $container->getDefinition($id);
             $configurationDefinition->addMethodCall('setConfigurationPool', [
                 $poolReference,
-            ]
-            );
+            ]);
 
             $poolDefinition->addMethodCall('addConfiguration', [
                 new Reference($id),
-            ]
-            );
+            ]);
         }
     }
 }

@@ -57,18 +57,14 @@ class ConfigurationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setDefaults(
-                [
+            ->setDefaults([
                 'csrf_token_id' => md5(__FILE__.$this->getBlockPrefix()),
-                ]
-            )
+            ])
             ->remove('data_class')
-            ->setRequired(
-                [
+            ->setRequired([
                 'configuration',
                 'data_class',
-                ]
-            )
+            ])
             ->setAllowedTypes('configuration', ConfigurationInterface::CONFIGURATION_INTERFACE)
             ->setAllowedTypes('data_class', 'string');
     }
