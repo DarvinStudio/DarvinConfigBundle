@@ -6,12 +6,12 @@ parameters:
 
 services:
     darvin_config.parameter.repository:
-        class:   %darvin_config.parameter.repository.class%
+        class:   "%darvin_config.parameter.repository.class%"
         factory: [ "@doctrine.orm.entity_manager", getRepository ]
         arguments:
-            - %darvin_config.parameter.repository.entity%
+            - "%darvin_config.parameter.repository.entity%"
 
     darvin_config.parameter.value_converter:
-        class: %darvin_config.parameter.value_converter.class%
+        class: "%darvin_config.parameter.value_converter.class%"
         arguments:
             - "@doctrine.orm.entity_manager"
