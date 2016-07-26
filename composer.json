@@ -1,6 +1,6 @@
 {
     "name":        "darvinstudio/darvin-config-bundle",
-    "description": "This bundle provides configuration layer for Symfony2-based applications.",
+    "description": "This bundle provides configuration layer for Symfony-based applications.",
     "keywords":    ["configuration"],
     "type":        "symfony-bundle",
     "license":     "MIT",
