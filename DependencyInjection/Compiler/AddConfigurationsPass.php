@@ -29,23 +29,26 @@ class AddConfigurationsPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition(self::POOL_ID)) {
-            return;
-        }
+        $this->addConfigurations($container, $container->findTaggedServiceIds(self::TAG_CONFIGURATION));
+    }
 
-        $configurationIds = $container->findTaggedServiceIds(self::TAG_CONFIGURATION);
-
-        if (empty($configurationIds)) {
+    /**
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container DI container
+     * @param array                                                   $ids       Service IDs
+     */
+    public function addConfigurations(ContainerBuilder $container, array $ids)
+    {
+        if (empty($ids) || !$container->hasDefinition(self::POOL_ID)) {
             return;
         }
 
         $sorter = new TaggedServiceIdsSorter();
-        $sorter->sort($configurationIds);
+        $sorter->sort($ids);
 
         $poolDefinition = $container->getDefinition(self::POOL_ID);
         $poolReference = new Reference(self::POOL_ID);
 
-        foreach ($configurationIds as $id => $attr) {
+        foreach ($ids as $id => $attr) {
             $configurationDefinition = $container->getDefinition($id);
             $configurationDefinition->addMethodCall('setConfigurationPool', [
                 $poolReference,
