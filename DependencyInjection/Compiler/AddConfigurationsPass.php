@@ -10,7 +10,6 @@
 
 namespace Darvin\ConfigBundle\DependencyInjection\Compiler;
 
-use Darvin\Utils\DependencyInjection\TaggedServiceIdsSorter;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -29,12 +28,12 @@ class AddConfigurationsPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $this->addConfigurations($container, $container->findTaggedServiceIds(self::TAG_CONFIGURATION));
+        $this->addConfigurations($container, array_keys($container->findTaggedServiceIds(self::TAG_CONFIGURATION)));
     }
 
     /**
      * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container DI container
-     * @param array                                                   $ids       Service IDs
+     * @param string[]                                                $ids       Service IDs
      */
     public function addConfigurations(ContainerBuilder $container, array $ids)
     {
@@ -42,13 +41,10 @@ class AddConfigurationsPass implements CompilerPassInterface
             return;
         }
 
-        $sorter = new TaggedServiceIdsSorter();
-        $sorter->sort($ids);
-
         $poolDefinition = $container->getDefinition(self::POOL_ID);
         $poolReference = new Reference(self::POOL_ID);
 
-        foreach ($ids as $id => $attr) {
+        foreach ($ids as $id) {
             $configurationDefinition = $container->getDefinition($id);
             $configurationDefinition->addMethodCall('setConfigurationPool', [
                 $poolReference,
