@@ -21,6 +21,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ParameterEntity
 {
+    const PARAMETER_ENTITY_CLASS = __CLASS__;
+
     /**
      * @var string
      *
