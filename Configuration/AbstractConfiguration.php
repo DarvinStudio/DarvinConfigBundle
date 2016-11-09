@@ -52,7 +52,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
         if (!array_key_exists($parameterName, $this->values)) {
             throw new ConfigurationException(sprintf('Method "%s::%s()" does not exist.', get_called_class(), $method));
         }
-        if (preg_match('/^(get|is)_/', $methodUnderscore)) {
+        if ($methodUnderscore === $parameterName || preg_match('/^(get|is)_/', $methodUnderscore)) {
             return $this->values[$parameterName];
         }
         if (empty($arguments)) {
