@@ -43,6 +43,12 @@ class ConfigurationType extends AbstractType
         $configuration = $this->getConfiguration($options);
 
         foreach ($configuration->getModel() as $parameterModel) {
+            $options = $parameterModel->getOptions();
+
+            if (isset($options['hidden']) && $options['hidden']) {
+                continue;
+            }
+
             $builder->add(
                 lcfirst(StringsUtil::toCamelCase($parameterModel->getName())),
                 $this->getFieldType($parameterModel),
