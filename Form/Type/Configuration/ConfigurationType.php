@@ -13,7 +13,12 @@ namespace Darvin\ConfigBundle\Form\Type\Configuration;
 use Darvin\ConfigBundle\Configuration\ConfigurationInterface;
 use Darvin\ConfigBundle\Parameter\ParameterModel;
 use Darvin\Utils\Strings\StringsUtil;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -26,11 +31,11 @@ class ConfigurationType extends AbstractType
      * @var array
      */
     private static $defaultFieldTypes = [
-        ParameterModel::TYPE_ARRAY   => 'Symfony\Component\Form\Extension\Core\Type\CollectionType',
-        ParameterModel::TYPE_BOOL    => 'Symfony\Component\Form\Extension\Core\Type\CheckboxType',
-        ParameterModel::TYPE_ENTITY  => 'Symfony\Bridge\Doctrine\Form\Type\EntityType',
-        ParameterModel::TYPE_FLOAT   => 'Symfony\Component\Form\Extension\Core\Type\NumberType',
-        ParameterModel::TYPE_INTEGER => 'Symfony\Component\Form\Extension\Core\Type\IntegerType',
+        ParameterModel::TYPE_ARRAY   => CollectionType::class,
+        ParameterModel::TYPE_BOOL    => CheckboxType::class,
+        ParameterModel::TYPE_ENTITY  => EntityType::class,
+        ParameterModel::TYPE_FLOAT   => NumberType::class,
+        ParameterModel::TYPE_INTEGER => IntegerType::class,
     ];
 
     /**
