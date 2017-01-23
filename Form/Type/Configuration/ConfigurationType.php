@@ -22,8 +22,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ConfigurationType extends AbstractType
 {
-    const CONFIGURATION_TYPE_CLASS = __CLASS__;
-
     /**
      * @var array
      */
@@ -71,7 +69,7 @@ class ConfigurationType extends AbstractType
                 'configuration',
                 'data_class',
             ])
-            ->setAllowedTypes('configuration', ConfigurationInterface::CONFIGURATION_INTERFACE)
+            ->setAllowedTypes('configuration', ConfigurationInterface::class)
             ->setAllowedTypes('data_class', 'string');
     }
 

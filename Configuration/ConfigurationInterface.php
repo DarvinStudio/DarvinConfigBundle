@@ -15,8 +15,6 @@ namespace Darvin\ConfigBundle\Configuration;
  */
 interface ConfigurationInterface
 {
-    const CONFIGURATION_INTERFACE = __CLASS__;
-
     /**
      * @param \Darvin\ConfigBundle\Configuration\ConfigurationPool $configurationPool Configuration pool
      */
