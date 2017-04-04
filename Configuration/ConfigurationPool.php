@@ -218,22 +218,47 @@ class ConfigurationPool
 
         foreach ($configuration->getModel() as $parameterModel) {
             $parameterName = $parameterModel->getName();
+            $default = $parameterModel->getDefaultValue();
 
             if (!isset($parameters[$parameterName])) {
-                $values[$parameterName] = $parameterModel->getDefaultValue();
+                $values[$parameterName] = $default;
 
                 continue;
             }
 
             $parameter = $parameters[$parameterName];
 
-            $values[$parameterName] = null !== $parameter->getValue()
-                ? $this->parameterValueConverter->fromString(
-                    $parameter->getValue(),
-                    $parameterModel->getType(),
-                    $parameterModel->getOptions()
-                )
-                : $parameterModel->getDefaultValue();
+            if (null === $parameter->getValue()) {
+                $values[$parameterName] = $default;
+
+                continue;
+            }
+
+            $value = $this->parameterValueConverter->fromString(
+                $parameter->getValue(),
+                $parameterModel->getType(),
+                $parameterModel->getOptions()
+            );
+
+            if (ParameterModel::TYPE_ARRAY === $parameterModel->getType() && count($value) !== count($default)) {
+                // Add missing elements
+                foreach ($default as $key => $v) {
+                    if (!array_key_exists($key, $value)) {
+                        $value[$key] = $v;
+                    }
+                }
+
+                $value = array_merge($default, $value);
+
+                // Remove redundant elements
+                foreach ($value as $key => $v) {
+                    if (!array_key_exists($key, $default)) {
+                        unset($value[$key]);
+                    }
+                }
+            }
+
+            $values[$parameterName] = $value;
         }
 
         $configuration->setValues($values);
