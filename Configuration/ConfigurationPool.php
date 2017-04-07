@@ -241,9 +241,9 @@ class ConfigurationPool
             );
 
             if (ParameterModel::TYPE_ARRAY === $parameterModel->getType()) {
-                $valueSize = count($value);
+                $valueKeys = array_keys($value);
 
-                if ($valueSize !== count($default) && range(0, $valueSize - 1) !== array_keys($value)) {
+                if (count($value) !== count($default) && $valueKeys !== array_map('intval', $valueKeys)) {
                     // Add missing elements
                     foreach ($default as $key => $v) {
                         if (!array_key_exists($key, $value)) {
