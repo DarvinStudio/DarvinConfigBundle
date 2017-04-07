@@ -240,20 +240,24 @@ class ConfigurationPool
                 $parameterModel->getOptions()
             );
 
-            if (ParameterModel::TYPE_ARRAY === $parameterModel->getType() && count($value) !== count($default)) {
-                // Add missing elements
-                foreach ($default as $key => $v) {
-                    if (!array_key_exists($key, $value)) {
-                        $value[$key] = $v;
+            if (ParameterModel::TYPE_ARRAY === $parameterModel->getType()) {
+                $valueSize = count($value);
+
+                if ($valueSize !== count($default) && range(0, $valueSize - 1) !== array_keys($value)) {
+                    // Add missing elements
+                    foreach ($default as $key => $v) {
+                        if (!array_key_exists($key, $value)) {
+                            $value[$key] = $v;
+                        }
                     }
-                }
 
-                $value = array_merge($default, $value);
+                    $value = array_merge($default, $value);
 
-                // Remove redundant elements
-                foreach ($value as $key => $v) {
-                    if (!array_key_exists($key, $default)) {
-                        unset($value[$key]);
+                    // Remove redundant elements
+                    foreach ($value as $key => $v) {
+                        if (!array_key_exists($key, $default)) {
+                            unset($value[$key]);
+                        }
                     }
                 }
             }
