@@ -103,6 +103,33 @@ class ParameterModel
     }
 
     /**
+     * @param string $name  Option name
+     * @param mixed  $value Option value
+     *
+     * @return ParameterModel
+     */
+    public function setOption($name, $value)
+    {
+        $this->options[$name] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @param array $options Options
+     *
+     * @return ParameterModel
+     */
+    public function setOptions(array $options)
+    {
+        $this->validateOptions($options, $this->type);
+
+        $this->options = $options;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public static function getTypes()
