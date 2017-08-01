@@ -84,7 +84,7 @@ class ParameterModel
      * @param mixed  $defaultValue Default value
      * @param array  $options      Options
      */
-    public function __construct($name, $type, $defaultValue = null, array $options = [])
+    public function __construct($name, $type = self::TYPE_STRING, $defaultValue = null, array $options = [])
     {
         $this->validateOptions($options, $type);
 
