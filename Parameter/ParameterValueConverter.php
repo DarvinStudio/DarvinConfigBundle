@@ -92,6 +92,7 @@ class ParameterValueConverter
             },
             ParameterModel::TYPE_FLOAT   => 'floatval',
             ParameterModel::TYPE_INTEGER => 'intval',
+            ParameterModel::TYPE_OBJECT  => 'unserialize',
         ];
     }
 
@@ -116,6 +117,7 @@ class ParameterValueConverter
             },
             ParameterModel::TYPE_FLOAT   => 'strval',
             ParameterModel::TYPE_INTEGER => 'strval',
+            ParameterModel::TYPE_OBJECT  => 'serialize',
         ];
     }
 }

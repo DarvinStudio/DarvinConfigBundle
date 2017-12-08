@@ -21,6 +21,7 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Valid;
 
 /**
  * Configuration form type
@@ -131,6 +132,16 @@ class ConfigurationType extends AbstractType
         }
         if (ParameterModel::TYPE_ENTITY === $parameterModel->getType() && !isset($fieldOptions['class'])) {
             $fieldOptions['class'] = $parameterOptions['class'];
+        }
+        if (ParameterModel::TYPE_OBJECT === $parameterModel->getType()) {
+            if (!isset($fieldOptions['constraints'])) {
+                $fieldOptions['constraints'] = [];
+            }
+            if (!is_array($fieldOptions['constraints'])) {
+                $fieldOptions['constraints'] = [$fieldOptions['constraints']];
+            }
+
+            $fieldOptions['constraints'][] = new Valid();
         }
 
         return $fieldOptions;

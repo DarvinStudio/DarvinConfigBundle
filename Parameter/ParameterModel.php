@@ -23,6 +23,7 @@ class ParameterModel
     const TYPE_ENTITY  = 'entity';
     const TYPE_FLOAT   = 'float';
     const TYPE_INTEGER = 'integer';
+    const TYPE_OBJECT  = 'object';
     const TYPE_STRING  = 'string';
 
     /**
@@ -34,6 +35,7 @@ class ParameterModel
         self::TYPE_ENTITY  => 'object',
         self::TYPE_FLOAT   => 'double',
         self::TYPE_INTEGER => 'integer',
+        self::TYPE_OBJECT  => 'object',
         self::TYPE_STRING  => 'string',
     ];
 
@@ -42,6 +44,9 @@ class ParameterModel
      */
     private static $requiredOptions = [
         self::TYPE_ENTITY => [
+            'class',
+        ],
+        self::TYPE_OBJECT => [
             'class',
         ],
     ];
@@ -55,6 +60,7 @@ class ParameterModel
         self::TYPE_ENTITY,
         self::TYPE_FLOAT,
         self::TYPE_INTEGER,
+        self::TYPE_OBJECT,
         self::TYPE_STRING,
     ];
 
