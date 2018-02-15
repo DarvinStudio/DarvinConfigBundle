@@ -12,3 +12,5 @@ new ParameterModel('map', ParameterModel::TYPE_OBJECT, new Map(), [
 
 ...
 ```
+
+5.1.1: Sort configurations in the add configurations compiler pass.
