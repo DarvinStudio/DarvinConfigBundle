@@ -11,7 +11,6 @@
 namespace Darvin\ConfigBundle\Parameter;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Util\ClassUtils;
 
 /**
  * Configuration parameter value converter
@@ -111,7 +110,7 @@ class ParameterValueConverter
                     return '';
                 }
 
-                $ids = $om->getClassMetadata(ClassUtils::getClass($entity))->getIdentifierValues($entity);
+                $ids = $om->getClassMetadata(get_class($entity))->getIdentifierValues($entity);
 
                 return (string) reset($ids);
             },
