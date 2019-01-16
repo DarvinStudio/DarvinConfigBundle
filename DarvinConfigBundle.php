@@ -11,6 +11,7 @@
 namespace Darvin\ConfigBundle;
 
 use Darvin\ConfigBundle\DependencyInjection\Compiler\AddConfigurationsPass;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -26,6 +27,6 @@ class DarvinConfigBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new AddConfigurationsPass());
+        $container->addCompilerPass(new AddConfigurationsPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, -10);
     }
 }

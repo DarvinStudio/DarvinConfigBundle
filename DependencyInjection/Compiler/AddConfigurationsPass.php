@@ -22,42 +22,27 @@ class AddConfigurationsPass implements CompilerPassInterface
 {
     const POOL_ID = 'darvin_config.configuration.pool';
 
-    const TAG_CONFIGURATION = 'darvin_config.configuration';
-
     /**
      * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {
-        $ids = $container->findTaggedServiceIds(self::TAG_CONFIGURATION);
+        $ids = $container->findTaggedServiceIds('darvin_config.configuration');
 
-        (new TaggedServiceIdsSorter())->sort($ids);
-
-        $this->addConfigurations($container, array_keys($ids));
-    }
-
-    /**
-     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container DI container
-     * @param string[]                                                $ids       Service IDs
-     */
-    public function addConfigurations(ContainerBuilder $container, array $ids)
-    {
-        if (empty($ids) || !$container->hasDefinition(self::POOL_ID)) {
+        if (empty($ids)) {
             return;
         }
 
+        (new TaggedServiceIdsSorter())->sort($ids);
+
         $poolDefinition = $container->getDefinition(self::POOL_ID);
-        $poolReference = new Reference(self::POOL_ID);
+        $poolReference  = new Reference(self::POOL_ID);
 
-        foreach ($ids as $id) {
+        foreach (array_keys($ids) as $id) {
             $configurationDefinition = $container->getDefinition($id);
-            $configurationDefinition->addMethodCall('setConfigurationPool', [
-                $poolReference,
-            ]);
+            $configurationDefinition->addMethodCall('setConfigurationPool', [$poolReference]);
 
-            $poolDefinition->addMethodCall('addConfiguration', [
-                new Reference($id),
-            ]);
+            $poolDefinition->addMethodCall('addConfiguration', [new Reference($id)]);
         }
     }
 }
