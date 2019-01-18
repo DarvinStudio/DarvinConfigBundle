@@ -29,20 +29,35 @@ class AddConfigurationsPass implements CompilerPassInterface
     {
         $ids = $container->findTaggedServiceIds('darvin_config.configuration');
 
-        if (empty($ids)) {
+        (new TaggedServiceIdsSorter())->sort($ids);
+
+        $this->addConfigurations($container, array_keys($ids));
+    }
+
+    /**
+     * @deprecated
+     *
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container DI container
+     * @param string[]                                                $ids       Service IDs
+     */
+    public function addConfigurations(ContainerBuilder $container, array $ids)
+    {
+        if (empty($ids) || !$container->hasDefinition(self::POOL_ID)) {
             return;
         }
 
-        (new TaggedServiceIdsSorter())->sort($ids);
-
         $poolDefinition = $container->getDefinition(self::POOL_ID);
-        $poolReference  = new Reference(self::POOL_ID);
+        $poolReference = new Reference(self::POOL_ID);
 
-        foreach (array_keys($ids) as $id) {
+        foreach ($ids as $id) {
             $configurationDefinition = $container->getDefinition($id);
-            $configurationDefinition->addMethodCall('setConfigurationPool', [$poolReference]);
+            $configurationDefinition->addMethodCall('setConfigurationPool', [
+                $poolReference,
+            ]);
 
-            $poolDefinition->addMethodCall('addConfiguration', [new Reference($id)]);
+            $poolDefinition->addMethodCall('addConfiguration', [
+                new Reference($id),
+            ]);
         }
     }
 }
