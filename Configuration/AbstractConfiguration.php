@@ -20,20 +20,12 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     /**
      * @var array
      */
-    private $values;
+    private $values = [];
 
     /**
      * @var \Darvin\ConfigBundle\Configuration\ConfigurationPool
      */
     private $configurationPool;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->values = [];
-    }
 
     /**
      * @param string $method    Method name

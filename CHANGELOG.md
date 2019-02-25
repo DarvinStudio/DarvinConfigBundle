@@ -16,3 +16,5 @@ new ParameterModel('map', ParameterModel::TYPE_OBJECT, new Map(), [
 5.1.1: Sort configurations in the add configurations compiler pass.
 
 5.1.2: Force make services public by default.
+
+5.1.9: Remove constructor from abstract configuration class to make it more easy extendable.
