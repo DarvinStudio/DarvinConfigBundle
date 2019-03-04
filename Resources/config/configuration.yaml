@@ -5,6 +5,3 @@ services:
     darvin_config.configuration.pool:
         class:  '%darvin_config.configuration.pool.class%'
         public: true
-        arguments:
-            - '@darvin_config.parameter.repository'
-            - '@darvin_config.parameter.value_converter'

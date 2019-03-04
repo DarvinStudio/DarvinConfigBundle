@@ -12,46 +12,35 @@ namespace Darvin\ConfigBundle\Repository;
 
 use Darvin\ConfigBundle\Entity\ParameterEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Configuration parameter entity repository
- *
- * @method ParameterEntity[] findAll()
  */
 class ParameterRepository extends ServiceEntityRepository implements ParameterRepositoryInterface
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function getAllParameters(): iterable
+    public function getConfigurationParameters(string $configuration): iterable
     {
-        foreach ($this->findAll() as $entity) {
+        foreach ($this->getByConfiguration($configuration) as $entity) {
             yield $entity->toParameter();
         }
     }
 
     /**
-     * @param \Darvin\ConfigBundle\Parameter\Parameter[] $parameters Configuration parameters
+     * {@inheritDoc}
      */
-    public function save(array $parameters): void
+    public function saveConfigurationParameters(string $configuration, array $parameters): void
     {
         $entities = [];
 
-        foreach ($this->findAll() as $entity) {
-            $configurationName = $entity->getConfigurationName();
-
-            if (!isset($entities[$configurationName])) {
-                $entities[$configurationName] = [];
-            }
-
-            $entities[$configurationName][$entity->getName()] = $entity;
+        foreach ($this->getByConfiguration($configuration) as $entity) {
+            $entities[$entity->getName()] = $entity;
         }
         foreach ($parameters as $parameter) {
-            $configurationName = $parameter->getConfigurationName();
-
-            $entity = isset($entities[$configurationName][$parameter->getName()])
-                ? $entities[$configurationName][$parameter->getName()]
-                : new ParameterEntity();
+            $entity = $entities[$parameter->getName()] ?? new ParameterEntity();
 
             $entity->updateFromParameter($parameter);
 
@@ -59,5 +48,39 @@ class ParameterRepository extends ServiceEntityRepository implements ParameterRe
         }
 
         $this->_em->flush();
+    }
+
+    /**
+     * @param string $configuration Configuration name
+     *
+     * @return \Darvin\ConfigBundle\Entity\ParameterEntity[]
+     */
+    private function getByConfiguration(string $configuration): array
+    {
+        $qb = $this->createDefaultBuilder();
+        $this->addConfigurationFilter($qb, $configuration);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @param \Doctrine\ORM\QueryBuilder $qb            Query builder
+     * @param string                     $configuration Configuration name
+     *
+     * @return ParameterRepository
+     */
+    private function addConfigurationFilter(QueryBuilder $qb, string $configuration): ParameterRepository
+    {
+        $qb->andWhere('o.configurationName = :configuration_name')->setParameter('configuration_name', $configuration);
+
+        return $this;
+    }
+
+    /**
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function createDefaultBuilder(): QueryBuilder
+    {
+        return $this->createQueryBuilder('o');
     }
 }

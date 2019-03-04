@@ -10,10 +10,7 @@
 
 namespace Darvin\ConfigBundle\Configuration;
 
-use Darvin\ConfigBundle\Parameter\Parameter;
 use Darvin\ConfigBundle\Parameter\ParameterModel;
-use Darvin\ConfigBundle\Parameter\ParameterValueConverterInterface;
-use Darvin\ConfigBundle\Repository\ParameterRepositoryInterface;
 
 /**
  * Configuration pool
@@ -21,40 +18,16 @@ use Darvin\ConfigBundle\Repository\ParameterRepositoryInterface;
 class ConfigurationPool
 {
     /**
-     * @var \Darvin\ConfigBundle\Repository\ParameterRepositoryInterface
-     */
-    private $parameterRepository;
-
-    /**
-     * @var \Darvin\ConfigBundle\Parameter\ParameterValueConverterInterface
-     */
-    private $parameterValueConverter;
-
-    /**
      * @var \Darvin\ConfigBundle\Configuration\ConfigurationInterface[]
      */
     private $configurations;
 
     /**
-     * @var \Darvin\ConfigBundle\Parameter\Parameter[]
+     * Configuration pool constructor.
      */
-    private $persistedParameters;
-
-    /**
-     * @var bool
-     */
-    private $initialized;
-
-    /**
-     * @param \Darvin\ConfigBundle\Repository\ParameterRepositoryInterface    $parameterRepository     Configuration parameter repository
-     * @param \Darvin\ConfigBundle\Parameter\ParameterValueConverterInterface $parameterValueConverter Parameter value converter
-     */
-    public function __construct(ParameterRepositoryInterface $parameterRepository, ParameterValueConverterInterface $parameterValueConverter)
+    public function __construct()
     {
-        $this->parameterRepository = $parameterRepository;
-        $this->parameterValueConverter = $parameterValueConverter;
         $this->configurations = [];
-        $this->initialized = false;
     }
 
     /**
@@ -93,8 +66,6 @@ class ConfigurationPool
      */
     public function getAllConfigurations()
     {
-        $this->init();
-
         return $this->configurations;
     }
 
@@ -103,167 +74,9 @@ class ConfigurationPool
      */
     public function saveAll()
     {
-        $this->init();
-
-        $parameters = [];
-
         foreach ($this->configurations as $configuration) {
-            $parameters = array_merge($parameters, $this->getConfigurationParameters($configuration));
+            $configuration->save();
         }
-
-        $this->parameterRepository->save($parameters);
-    }
-
-    /**
-     * @param \Darvin\ConfigBundle\Configuration\ConfigurationInterface $configuration Configuration to save
-     */
-    public function save(ConfigurationInterface $configuration)
-    {
-        $this->init();
-
-        $this->parameterRepository->save($this->getConfigurationParameters($configuration));
-    }
-
-    /**
-     * Initializes configurations.
-     */
-    public function init()
-    {
-        if ($this->initialized) {
-            return;
-        }
-
-        $parameters = [];
-
-        foreach ($this->parameterRepository->getAllParameters() as $parameter) {
-            $configurationName = $parameter->getConfigurationName();
-
-            if (!isset($parameters[$configurationName])) {
-                $parameters[$configurationName] = [];
-            }
-
-            $parameters[$configurationName][$parameter->getName()] = $parameter;
-        }
-
-        $this->persistedParameters = $parameters;
-
-        foreach ($this->configurations as $configuration) {
-            $configurationName = $configuration->getName();
-            $this->initConfiguration(
-                $configuration,
-                isset($parameters[$configurationName]) ? $parameters[$configurationName] : []
-            );
-        }
-
-        $this->initialized = true;
-    }
-
-    /**
-     * @param \Darvin\ConfigBundle\Configuration\ConfigurationInterface $configuration Configuration
-     *
-     * @return array
-     * @throws \UnexpectedValueException
-     */
-    private function getConfigurationParameters(ConfigurationInterface $configuration)
-    {
-        $parameters = [];
-
-        $values = $configuration->getValues();
-
-        foreach ($configuration->getModel() as $parameterModel) {
-            $parameterName = $parameterModel->getName();
-            $parameterType = $parameterModel->getType();
-            $parameterDataType = $parameterModel->getDataType();
-
-            if (!array_key_exists($parameterName, $values)) {
-                continue;
-            }
-
-            $value = $values[$parameterName];
-
-            if ($value == $parameterModel->getDefaultValue()
-                && !isset($this->persistedParameters[$configuration->getName()][$parameterName])
-            ) {
-                continue;
-            }
-            if (null !== $value && gettype($value) !== $parameterDataType) {
-                $message = sprintf(
-                    'Parameter "%s" of configuration "%s" must have value of "%s" type, "%s" type value provided.',
-                    $parameterName,
-                    $configuration->getName(),
-                    $parameterDataType,
-                    gettype($value)
-                );
-
-                throw new \UnexpectedValueException($message);
-            }
-
-            $value = $this->parameterValueConverter->toString($value, $parameterType, $parameterModel->getOptions());
-
-            $parameters[] = new Parameter($configuration->getName(), $parameterName, $parameterType, $value);
-        }
-
-        return $parameters;
-    }
-
-    /**
-     * @param \Darvin\ConfigBundle\Configuration\ConfigurationInterface $configuration Configuration to initialize
-     * @param \Darvin\ConfigBundle\Parameter\Parameter[]                $parameters    Configuration parameters
-     */
-    private function initConfiguration(ConfigurationInterface $configuration, array $parameters)
-    {
-        $values = [];
-
-        foreach ($configuration->getModel() as $parameterModel) {
-            $parameterName = $parameterModel->getName();
-            $default = $parameterModel->getDefaultValue();
-
-            if (!isset($parameters[$parameterName])) {
-                $values[$parameterName] = $default;
-
-                continue;
-            }
-
-            $parameter = $parameters[$parameterName];
-
-            if (null === $parameter->getValue()) {
-                $values[$parameterName] = $default;
-
-                continue;
-            }
-
-            $value = $this->parameterValueConverter->fromString(
-                $parameter->getValue(),
-                $parameterModel->getType(),
-                $parameterModel->getOptions()
-            );
-
-            if (ParameterModel::TYPE_ARRAY === $parameterModel->getType()) {
-                $valueKeys = array_keys($value);
-
-                if (count($value) !== count($default) && $valueKeys !== array_map('intval', $valueKeys)) {
-                    // Add missing elements
-                    foreach ($default as $key => $v) {
-                        if (!array_key_exists($key, $value)) {
-                            $value[$key] = $v;
-                        }
-                    }
-
-                    $value = array_merge($default, $value);
-
-                    // Remove redundant elements
-                    foreach ($value as $key => $v) {
-                        if (!array_key_exists($key, $default)) {
-                            unset($value[$key]);
-                        }
-                    }
-                }
-            }
-
-            $values[$parameterName] = $value;
-        }
-
-        $configuration->setValues($values);
     }
 
     /**

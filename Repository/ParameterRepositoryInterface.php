@@ -16,12 +16,15 @@ namespace Darvin\ConfigBundle\Repository;
 interface ParameterRepositoryInterface
 {
     /**
+     * @param string $configuration Configuration name
+     *
      * @return \Darvin\ConfigBundle\Parameter\Parameter[]|iterable
      */
-    public function getAllParameters(): iterable;
+    public function getConfigurationParameters(string $configuration): iterable;
 
     /**
-     * @param \Darvin\ConfigBundle\Parameter\Parameter[] $parameters Configuration parameters
+     * @param string                                     $configuration Configuration name
+     * @param \Darvin\ConfigBundle\Parameter\Parameter[] $parameters    Configuration parameters
      */
-    public function save(array $parameters): void;
+    public function saveConfigurationParameters(string $configuration, array $parameters): void;
 }
