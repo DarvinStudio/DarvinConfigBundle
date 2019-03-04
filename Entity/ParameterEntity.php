@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -24,7 +24,7 @@ class ParameterEntity
     /**
      * @var string
      *
-     * @ORM\Column(type="string", unique=true)
+     * @ORM\Column(unique=true)
      * @ORM\GeneratedValue(strategy="UUID")
      * @ORM\Id
      */
@@ -33,35 +33,43 @@ class ParameterEntity
     /**
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column
      */
     private $configurationName;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column
      */
     private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column
      */
     private $type;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(type="text", nullable=true)
      */
     private $value;
 
     /**
+     * @return \Darvin\ConfigBundle\Parameter\Parameter
+     */
+    public function toParameter(): Parameter
+    {
+        return new Parameter($this->configurationName, $this->name, $this->type, $this->value);
+    }
+
+    /**
      * @param \Darvin\ConfigBundle\Parameter\Parameter $parameter Parameter
      */
-    public function updateFromParameter(Parameter $parameter)
+    public function updateFromParameter(Parameter $parameter): void
     {
         $this->configurationName = $parameter->getConfigurationName();
         $this->name = $parameter->getName();
@@ -70,17 +78,9 @@ class ParameterEntity
     }
 
     /**
-     * @return \Darvin\ConfigBundle\Parameter\Parameter
-     */
-    public function toParameter()
-    {
-        return new Parameter($this->configurationName, $this->name, $this->type, $this->value);
-    }
-
-    /**
      * @return string
      */
-    public function getId()
+    public function getId(): ?string
     {
         return $this->id;
     }
@@ -88,7 +88,7 @@ class ParameterEntity
     /**
      * @return string
      */
-    public function getConfigurationName()
+    public function getConfigurationName(): ?string
     {
         return $this->configurationName;
     }
@@ -96,7 +96,7 @@ class ParameterEntity
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -104,15 +104,15 @@ class ParameterEntity
     /**
      * @return string
      */
-    public function getType()
+    public function getType(): ?string
     {
         return $this->type;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getValue()
+    public function getValue(): ?string
     {
         return $this->value;
     }
