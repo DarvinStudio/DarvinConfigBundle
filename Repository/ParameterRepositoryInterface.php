@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -16,12 +16,12 @@ namespace Darvin\ConfigBundle\Repository;
 interface ParameterRepositoryInterface
 {
     /**
-     * @return \Darvin\ConfigBundle\Parameter\Parameter[]
+     * @return \Darvin\ConfigBundle\Parameter\Parameter[]|iterable
      */
-    public function getAllParameters();
+    public function getAllParameters(): iterable;
 
     /**
      * @param \Darvin\ConfigBundle\Parameter\Parameter[] $parameters Configuration parameters
      */
-    public function save(array $parameters);
+    public function save(array $parameters): void;
 }

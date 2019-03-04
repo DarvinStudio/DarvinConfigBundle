@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -11,49 +11,51 @@
 namespace Darvin\ConfigBundle\Repository;
 
 use Darvin\ConfigBundle\Entity\ParameterEntity;
-use Doctrine\ORM\EntityRepository;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * Configuration parameter entity repository
  *
  * @method \Darvin\ConfigBundle\Entity\ParameterEntity[] findAll()
  */
-class ParameterRepository extends EntityRepository implements ParameterRepositoryInterface
+class ParameterRepository extends ServiceEntityRepository implements ParameterRepositoryInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function getAllParameters()
+    public function getAllParameters(): iterable
     {
-        return array_map(function (ParameterEntity $parameterEntity) {
-            return $parameterEntity->toParameter();
-        }, $this->findAll());
+        foreach ($this->findAll() as $entity) {
+            yield $entity->toParameter();
+        }
     }
 
     /**
      * @param \Darvin\ConfigBundle\Parameter\Parameter[] $parameters Configuration parameters
      */
-    public function save(array $parameters)
+    public function save(array $parameters): void
     {
-        $parameterEntities = [];
+        $entities = [];
 
-        foreach ($this->findAll() as $parameterEntity) {
-            $configurationName = $parameterEntity->getConfigurationName();
+        foreach ($this->findAll() as $entity) {
+            $configurationName = $entity->getConfigurationName();
 
-            if (!isset($parameterEntities[$configurationName])) {
-                $parameterEntities[$configurationName] = [];
+            if (!isset($entities[$configurationName])) {
+                $entities[$configurationName] = [];
             }
 
-            $parameterEntities[$configurationName][$parameterEntity->getName()] = $parameterEntity;
+            $entities[$configurationName][$entity->getName()] = $entity;
         }
         foreach ($parameters as $parameter) {
             $configurationName = $parameter->getConfigurationName();
-            $parameterEntity = isset($parameterEntities[$configurationName][$parameter->getName()])
-                ? $parameterEntities[$configurationName][$parameter->getName()]
-                : new ParameterEntity();
-            $parameterEntity->updateFromParameter($parameter);
 
-            $this->_em->persist($parameterEntity);
+            $entity = isset($entities[$configurationName][$parameter->getName()])
+                ? $entities[$configurationName][$parameter->getName()]
+                : new ParameterEntity();
+
+            $entity->updateFromParameter($parameter);
+
+            $this->_em->persist($entity);
         }
 
         $this->_em->flush();
