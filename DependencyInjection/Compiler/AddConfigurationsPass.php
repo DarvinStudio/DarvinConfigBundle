@@ -10,7 +10,7 @@
 
 namespace Darvin\ConfigBundle\DependencyInjection\Compiler;
 
-use Darvin\Utils\DependencyInjection\TaggedServiceIdsSorter;
+use Darvin\Utils\DependencyInjection\ServiceSorter;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -29,7 +29,7 @@ class AddConfigurationsPass implements CompilerPassInterface
     {
         $ids = $container->findTaggedServiceIds('darvin_config.configuration');
 
-        (new TaggedServiceIdsSorter())->sort($ids);
+        $ids = (new ServiceSorter())->sort($ids);
 
         $this->addConfigurations($container, array_keys($ids));
     }
