@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -10,9 +10,8 @@
 
 namespace Darvin\ConfigBundle\DependencyInjection;
 
-use Symfony\Component\Config\FileLocator;
+use Darvin\Utils\DependencyInjection\ConfigLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -25,13 +24,11 @@ class DarvinConfigExtension extends Extension
     /**
      * {@inheritdoc}
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
-//        $configuration = new Configuration();
-//        $config = $this->processConfiguration($configuration, $configs);
-
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('configuration.yaml');
-        $loader->load('parameter.yaml');
+        (new ConfigLoader($container, __DIR__.'/../Resources/config'))->load([
+            'configuration',
+            'parameter',
+        ]);
     }
 }
