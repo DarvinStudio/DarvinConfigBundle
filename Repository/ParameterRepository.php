@@ -12,13 +12,17 @@ namespace Darvin\ConfigBundle\Repository;
 
 use Darvin\ConfigBundle\Entity\ParameterEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\QueryBuilder;
 
 /**
  * Configuration parameter entity repository
  */
 class ParameterRepository extends ServiceEntityRepository implements ParameterRepositoryInterface
 {
+    /**
+     * @var \Darvin\ConfigBundle\Entity\ParameterEntity[]|null
+     */
+    private $entities = null;
+
     /**
      * {@inheritDoc}
      */
@@ -57,30 +61,21 @@ class ParameterRepository extends ServiceEntityRepository implements ParameterRe
      */
     private function getByConfiguration(string $configuration): array
     {
-        $qb = $this->createDefaultBuilder();
-        $this->addConfigurationFilter($qb, $configuration);
+        if (null === $this->entities) {
+            $entities = [];
 
-        return $qb->getQuery()->getResult();
-    }
+            /** @var \Darvin\ConfigBundle\Entity\ParameterEntity $entity */
+            foreach ($this->findAll() as $entity) {
+                if (!isset($entities[$entity->getConfigurationName()])) {
+                    $entities[$entity->getConfigurationName()] = [];
+                }
 
-    /**
-     * @param \Doctrine\ORM\QueryBuilder $qb            Query builder
-     * @param string                     $configuration Configuration name
-     *
-     * @return ParameterRepository
-     */
-    private function addConfigurationFilter(QueryBuilder $qb, string $configuration): ParameterRepository
-    {
-        $qb->andWhere('o.configurationName = :configuration_name')->setParameter('configuration_name', $configuration);
+                $entities[$entity->getConfigurationName()][] = $entity;
+            }
 
-        return $this;
-    }
+            $this->entities = $entities;
+        }
 
-    /**
-     * @return \Doctrine\ORM\QueryBuilder
-     */
-    private function createDefaultBuilder(): QueryBuilder
-    {
-        return $this->createQueryBuilder('o');
+        return $this->entities[$configuration] ?? [];
     }
 }
