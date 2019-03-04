@@ -294,13 +294,13 @@ class ConfigurationPool
 
                 throw new \UnexpectedValueException($message);
             }
-            if (!ParameterModel::isTypeExists($parameterType)) {
+            if (!ParameterModel::typeExists($parameterType)) {
                 $message = sprintf(
                     'Type "%s" of "%s" configuration parameter "%s" is not supported. Supported types: "%s".',
                     $parameterType,
                     $configuration->getName(),
                     $parameterName,
-                    implode('", "', ParameterModel::getTypes())
+                    implode('", "', ParameterModel::TYPES)
                 );
 
                 throw new \UnexpectedValueException($message);

@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -17,18 +17,25 @@ use Darvin\Utils\Strings\StringsUtil;
  */
 class ParameterModel
 {
-    const TYPE_ARRAY   = 'array';
-    const TYPE_BOOL    = 'bool';
-    const TYPE_ENTITY  = 'entity';
-    const TYPE_FLOAT   = 'float';
-    const TYPE_INTEGER = 'integer';
-    const TYPE_OBJECT  = 'object';
-    const TYPE_STRING  = 'string';
+    public const TYPE_ARRAY   = 'array';
+    public const TYPE_BOOL    = 'bool';
+    public const TYPE_ENTITY  = 'entity';
+    public const TYPE_FLOAT   = 'float';
+    public const TYPE_INTEGER = 'integer';
+    public const TYPE_OBJECT  = 'object';
+    public const TYPE_STRING  = 'string';
 
-    /**
-     * @var array
-     */
-    private static $dataTypes = [
+    public const TYPES = [
+        self::TYPE_ARRAY,
+        self::TYPE_BOOL,
+        self::TYPE_ENTITY,
+        self::TYPE_FLOAT,
+        self::TYPE_INTEGER,
+        self::TYPE_OBJECT,
+        self::TYPE_STRING,
+    ];
+
+    private const DATA_TYPES = [
         self::TYPE_ARRAY   => 'array',
         self::TYPE_BOOL    => 'boolean',
         self::TYPE_ENTITY  => 'object',
@@ -38,29 +45,13 @@ class ParameterModel
         self::TYPE_STRING  => 'string',
     ];
 
-    /**
-     * @var array
-     */
-    private static $requiredOptions = [
+    private const REQUIRED_OPTIONS = [
         self::TYPE_ENTITY => [
             'class',
         ],
         self::TYPE_OBJECT => [
             'class',
         ],
-    ];
-
-    /**
-     * @var array
-     */
-    private static $types = [
-        self::TYPE_ARRAY,
-        self::TYPE_BOOL,
-        self::TYPE_ENTITY,
-        self::TYPE_FLOAT,
-        self::TYPE_INTEGER,
-        self::TYPE_OBJECT,
-        self::TYPE_STRING,
     ];
 
     /**
@@ -89,7 +80,7 @@ class ParameterModel
      * @param mixed  $defaultValue Default value
      * @param array  $options      Options
      */
-    public function __construct($name, $type = self::TYPE_STRING, $defaultValue = null, array $options = [])
+    public function __construct(string $name, string $type = self::TYPE_STRING, $defaultValue = null, array $options = [])
     {
         $this->validateOptions($options, $type);
 
@@ -102,9 +93,9 @@ class ParameterModel
     /**
      * @return string
      */
-    public function getDataType()
+    public function getDataType(): string
     {
-        return self::$dataTypes[$this->type];
+        return self::DATA_TYPES[$this->type];
     }
 
     /**
@@ -113,7 +104,7 @@ class ParameterModel
      *
      * @return ParameterModel
      */
-    public function setOption($name, $value)
+    public function setOption(string $name, $value): ParameterModel
     {
         $this->options[$name] = $value;
 
@@ -125,7 +116,7 @@ class ParameterModel
      *
      * @return ParameterModel
      */
-    public function setOptions(array $options)
+    public function setOptions(array $options): ParameterModel
     {
         $this->validateOptions($options, $this->type);
 
@@ -135,21 +126,21 @@ class ParameterModel
     }
 
     /**
-     * @return array
-     */
-    public static function getTypes()
-    {
-        return self::$types;
-    }
-
-    /**
      * @param string $type Type
      *
      * @return bool
      */
-    public static function isTypeExists($type)
+    public static function typeExists(string $type): bool
     {
-        return in_array($type, self::$types);
+        return in_array($type, self::TYPES);
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
     }
 
     /**
@@ -157,7 +148,7 @@ class ParameterModel
      *
      * @return ParameterModel
      */
-    public function setName($name)
+    public function setName(string $name): ParameterModel
     {
         $this->name = $name;
 
@@ -167,9 +158,9 @@ class ParameterModel
     /**
      * @return string
      */
-    public function getName()
+    public function getType(): string
     {
-        return $this->name;
+        return $this->type;
     }
 
     /**
@@ -177,29 +168,9 @@ class ParameterModel
      *
      * @return ParameterModel
      */
-    public function setType($type)
+    public function setType(string $type): ParameterModel
     {
         $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * @param mixed $defaultValue defaultValue
-     *
-     * @return ParameterModel
-     */
-    public function setDefaultValue($defaultValue)
-    {
-        $this->defaultValue = $defaultValue;
 
         return $this;
     }
@@ -213,9 +184,21 @@ class ParameterModel
     }
 
     /**
+     * @param mixed $defaultValue defaultValue
+     *
+     * @return ParameterModel
+     */
+    public function setDefaultValue($defaultValue): ParameterModel
+    {
+        $this->defaultValue = $defaultValue;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
@@ -226,12 +209,12 @@ class ParameterModel
      *
      * @throws \LogicException
      */
-    private function validateOptions(array $options, $type)
+    private function validateOptions(array $options, string $type): void
     {
-        if (!isset(self::$requiredOptions[$type])) {
+        if (!isset(self::REQUIRED_OPTIONS[$type])) {
             return;
         }
-        foreach (self::$requiredOptions[$type] as $requiredOption) {
+        foreach (self::REQUIRED_OPTIONS[$type] as $requiredOption) {
             if (!array_key_exists($requiredOption, $options)) {
                 throw new \LogicException(
                     sprintf('Option "%s" must be provided for "%s" type parameters.', $requiredOption, $type)
