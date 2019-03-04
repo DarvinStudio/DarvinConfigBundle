@@ -32,7 +32,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      * @param array  $arguments Arguments
      *
      * @return mixed
-     * @throws \Darvin\ConfigBundle\Configuration\ConfigurationException
+     * @throws \InvalidArgumentException
      */
     public function __call($method, array $arguments = [])
     {
@@ -42,13 +42,13 @@ abstract class AbstractConfiguration implements ConfigurationInterface
         $parameterName = preg_replace('/^(get|is|set)_/', '', $methodUnderscore);
 
         if (!array_key_exists($parameterName, $this->values)) {
-            throw new ConfigurationException(sprintf('Method "%s::%s()" does not exist.', get_called_class(), $method));
+            throw new \InvalidArgumentException(sprintf('Method "%s::%s()" does not exist.', get_called_class(), $method));
         }
         if ($methodUnderscore === $parameterName || preg_match('/^(get|is)_/', $methodUnderscore)) {
             return $this->values[$parameterName];
         }
         if (empty($arguments)) {
-            throw new ConfigurationException(sprintf('Missing argument 1 for "%s::%s()".', get_called_class(), $method));
+            throw new \InvalidArgumentException(sprintf('Missing argument 1 for "%s::%s()".', get_called_class(), $method));
         }
 
         $this->values[$parameterName] = reset($arguments);
@@ -60,7 +60,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      * @param string $parameterName  Parameter name
      * @param mixed  $parameterValue Parameter value
      *
-     * @throws \Darvin\ConfigBundle\Configuration\ConfigurationException
+     * @throws \InvalidArgumentException
      */
     public function __set($parameterName, $parameterValue)
     {
@@ -69,7 +69,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
         $parameterName = StringsUtil::toUnderscore($parameterName);
 
         if (!array_key_exists($parameterName, $this->values)) {
-            throw new ConfigurationException(
+            throw new \InvalidArgumentException(
                 sprintf('Parameter "%s" is not defined in configuration "%s".', $parameterName, $this->getName())
             );
         }
@@ -81,7 +81,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      * @param string $parameterName Configuration parameter name
      *
      * @return mixed
-     * @throws \Darvin\ConfigBundle\Configuration\ConfigurationException
+     * @throws \InvalidArgumentException
      */
     public function __get($parameterName)
     {
@@ -90,7 +90,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
         $parameterName = StringsUtil::toUnderscore($parameterName);
 
         if (!array_key_exists($parameterName, $this->values)) {
-            throw new ConfigurationException(
+            throw new \InvalidArgumentException(
                 sprintf('Parameter "%s" is not defined in configuration "%s".', $parameterName, $this->getName())
             );
         }

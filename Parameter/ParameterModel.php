@@ -10,7 +10,6 @@
 
 namespace Darvin\ConfigBundle\Parameter;
 
-use Darvin\ConfigBundle\Configuration\ConfigurationException;
 use Darvin\Utils\Strings\StringsUtil;
 
 /**
@@ -225,7 +224,7 @@ class ParameterModel
      * @param array  $options Options
      * @param string $type    Parameter type
      *
-     * @throws \Darvin\ConfigBundle\Configuration\ConfigurationException
+     * @throws \LogicException
      */
     private function validateOptions(array $options, $type)
     {
@@ -234,7 +233,7 @@ class ParameterModel
         }
         foreach (self::$requiredOptions[$type] as $requiredOption) {
             if (!array_key_exists($requiredOption, $options)) {
-                throw new ConfigurationException(
+                throw new \LogicException(
                     sprintf('Option "%s" must be provided for "%s" type parameters.', $requiredOption, $type)
                 );
             }

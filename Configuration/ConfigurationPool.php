@@ -63,12 +63,12 @@ class ConfigurationPool
      * @param string $configurationName Configuration name
      *
      * @return \Darvin\ConfigBundle\Configuration\ConfigurationInterface
-     * @throws \Darvin\ConfigBundle\Configuration\ConfigurationException
+     * @throws \InvalidArgumentException
      */
     public function __get($configurationName)
     {
         if (!isset($this->configurations[$configurationName])) {
-            throw new ConfigurationException(sprintf('Configuration "%s" does not exist.', $configurationName));
+            throw new \InvalidArgumentException(sprintf('Configuration "%s" does not exist.', $configurationName));
         }
 
         return $this->configurations[$configurationName];
@@ -77,12 +77,12 @@ class ConfigurationPool
     /**
      * @param \Darvin\ConfigBundle\Configuration\ConfigurationInterface $configuration Configuration
      *
-     * @throws \Darvin\ConfigBundle\Configuration\ConfigurationException
+     * @throws \InvalidArgumentException
      */
     public function addConfiguration(ConfigurationInterface $configuration)
     {
         if (isset($this->configurations[$configuration->getName()])) {
-            throw new ConfigurationException(sprintf('Configuration "%s" already added.', $configuration->getName()));
+            throw new \InvalidArgumentException(sprintf('Configuration "%s" already added.', $configuration->getName()));
         }
 
         $this->validateConfiguration($configuration);
@@ -164,7 +164,7 @@ class ConfigurationPool
      * @param \Darvin\ConfigBundle\Configuration\ConfigurationInterface $configuration Configuration
      *
      * @return array
-     * @throws \Darvin\ConfigBundle\Configuration\ConfigurationException
+     * @throws \UnexpectedValueException
      */
     private function getConfigurationParameters(ConfigurationInterface $configuration)
     {
@@ -197,7 +197,7 @@ class ConfigurationPool
                     gettype($value)
                 );
 
-                throw new ConfigurationException($message);
+                throw new \UnexpectedValueException($message);
             }
 
             $value = $this->parameterValueConverter->toString($value, $parameterType, $parameterModel->getOptions());
@@ -271,7 +271,7 @@ class ConfigurationPool
     /**
      * @param \Darvin\ConfigBundle\Configuration\ConfigurationInterface $configuration Configuration to validate
      *
-     * @throws \Darvin\ConfigBundle\Configuration\ConfigurationException
+     * @throws \UnexpectedValueException
      */
     private function validateConfiguration(ConfigurationInterface $configuration)
     {
@@ -292,7 +292,7 @@ class ConfigurationPool
                     gettype($parameterDefaultValue)
                 );
 
-                throw new ConfigurationException($message);
+                throw new \UnexpectedValueException($message);
             }
             if (!ParameterModel::isTypeExists($parameterType)) {
                 $message = sprintf(
@@ -303,7 +303,7 @@ class ConfigurationPool
                     implode('", "', ParameterModel::getTypes())
                 );
 
-                throw new ConfigurationException($message);
+                throw new \UnexpectedValueException($message);
             }
             if (in_array($parameterName, $parameterNames)) {
                 $message = sprintf(
@@ -312,7 +312,7 @@ class ConfigurationPool
                     $configuration->getName()
                 );
 
-                throw new ConfigurationException($message);
+                throw new \UnexpectedValueException($message);
             }
 
             $parameterNames[] = $parameterName;
