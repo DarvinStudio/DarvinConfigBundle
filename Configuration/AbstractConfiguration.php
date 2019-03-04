@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -28,13 +28,21 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     private $configurationPool;
 
     /**
+     * @param \Darvin\ConfigBundle\Configuration\ConfigurationPool $configurationPool Configuration pool
+     */
+    public function setConfigurationPool(ConfigurationPool $configurationPool): void
+    {
+        $this->configurationPool = $configurationPool;
+    }
+
+    /**
      * @param string $method    Method name
      * @param array  $arguments Arguments
      *
      * @return mixed
      * @throws \InvalidArgumentException
      */
-    public function __call($method, array $arguments = [])
+    public function __call(string $method, array $arguments = [])
     {
         $this->configurationPool->init();
 
@@ -62,7 +70,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      *
      * @throws \InvalidArgumentException
      */
-    public function __set($parameterName, $parameterValue)
+    public function __set(string $parameterName, $parameterValue): void
     {
         $this->configurationPool->init();
 
@@ -83,7 +91,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      * @return mixed
      * @throws \InvalidArgumentException
      */
-    public function __get($parameterName)
+    public function __get(string $parameterName)
     {
         $this->configurationPool->init();
 
@@ -101,15 +109,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function setConfigurationPool(ConfigurationPool $configurationPool)
-    {
-        $this->configurationPool = $configurationPool;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function save()
+    public function save(): void
     {
         $this->configurationPool->save($this);
     }
@@ -117,7 +117,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function setValues(array $values)
+    public function setValues(array $values): void
     {
         $this->values = $values;
     }
@@ -125,7 +125,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getValues()
+    public function getValues(): array
     {
         return $this->values;
     }
