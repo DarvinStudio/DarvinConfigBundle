@@ -16,7 +16,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 /**
  * Configuration parameter entity repository
  *
- * @method \Darvin\ConfigBundle\Entity\ParameterEntity[] findAll()
+ * @method ParameterEntity[] findAll()
  */
 class ParameterRepository extends ServiceEntityRepository implements ParameterRepositoryInterface
 {
