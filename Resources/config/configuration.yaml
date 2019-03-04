@@ -2,11 +2,9 @@ parameters:
     darvin_config.configuration.pool.class: Darvin\ConfigBundle\Configuration\ConfigurationPool
 
 services:
-    _defaults:
-        public: true
-
     darvin_config.configuration.pool:
-        class: "%darvin_config.configuration.pool.class%"
+        class:  "%darvin_config.configuration.pool.class%"
+        public: true
         arguments:
             - "@darvin_config.parameter.repository"
             - "@darvin_config.parameter.value_converter"

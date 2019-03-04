@@ -5,9 +5,6 @@ parameters:
     darvin_config.parameter.value_converter.class: Darvin\ConfigBundle\Parameter\ParameterValueConverter
 
 services:
-    _defaults:
-        public: true
-
     darvin_config.parameter.repository:
         class:   "%darvin_config.parameter.repository.class%"
         factory: [ "@doctrine.orm.entity_manager", getRepository ]
