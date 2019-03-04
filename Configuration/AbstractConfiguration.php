@@ -58,11 +58,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     }
 
     /**
-     * @param string $method    Method name
-     * @param array  $arguments Arguments
-     *
-     * @return mixed
-     * @throws \InvalidArgumentException
+     * {@inheritDoc}
      */
     public function __call(string $method, array $arguments = [])
     {
@@ -89,10 +85,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     }
 
     /**
-     * @param string $parameterName  Parameter name
-     * @param mixed  $parameterValue Parameter value
-     *
-     * @throws \InvalidArgumentException
+     * {@inheritDoc}
      */
     public function __set(string $parameterName, $parameterValue): void
     {
@@ -111,10 +104,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     }
 
     /**
-     * @param string $parameterName Configuration parameter name
-     *
-     * @return mixed
-     * @throws \InvalidArgumentException
+     * {@inheritDoc}
      */
     public function __get(string $parameterName)
     {
@@ -131,7 +121,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function save(): void
     {
@@ -139,17 +129,9 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return array
      */
-    public function setValues(array $values): void
-    {
-        $this->values = $values;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getValues(): array
+    private function getValues(): array
     {
         if (null === $this->values) {
             $values              = [];
