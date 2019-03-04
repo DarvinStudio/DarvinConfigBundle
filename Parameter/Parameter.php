@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -41,7 +41,7 @@ class Parameter
      * @param string $type              Type
      * @param mixed  $value             Value
      */
-    public function __construct($configurationName, $name, $type, $value)
+    public function __construct(string $configurationName, string $name, string $type, $value)
     {
         $this->configurationName = $configurationName;
         $this->name = $name;
@@ -52,7 +52,7 @@ class Parameter
     /**
      * @return string
      */
-    public function getConfigurationName()
+    public function getConfigurationName(): string
     {
         return $this->configurationName;
     }
@@ -60,7 +60,7 @@ class Parameter
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -68,7 +68,7 @@ class Parameter
     /**
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
