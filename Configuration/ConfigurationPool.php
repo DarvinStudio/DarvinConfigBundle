@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -15,7 +15,7 @@ use Darvin\ConfigBundle\Parameter\ParameterModel;
 /**
  * Configuration pool
  */
-class ConfigurationPool
+class ConfigurationPool implements ConfigurationPoolInterface
 {
     /**
      * @var \Darvin\ConfigBundle\Configuration\ConfigurationInterface[]
@@ -31,12 +31,9 @@ class ConfigurationPool
     }
 
     /**
-     * @param string $configurationName Configuration name
-     *
-     * @return \Darvin\ConfigBundle\Configuration\ConfigurationInterface
-     * @throws \InvalidArgumentException
+     * {@inheritDoc}
      */
-    public function __get($configurationName)
+    public function __get(string $configurationName): ConfigurationInterface
     {
         if (!isset($this->configurations[$configurationName])) {
             throw new \InvalidArgumentException(sprintf('Configuration "%s" does not exist.', $configurationName));
@@ -46,33 +43,17 @@ class ConfigurationPool
     }
 
     /**
-     * @param \Darvin\ConfigBundle\Configuration\ConfigurationInterface $configuration Configuration
-     *
-     * @throws \InvalidArgumentException
+     * {@inheritDoc}
      */
-    public function addConfiguration(ConfigurationInterface $configuration)
-    {
-        if (isset($this->configurations[$configuration->getName()])) {
-            throw new \InvalidArgumentException(sprintf('Configuration "%s" already added.', $configuration->getName()));
-        }
-
-        $this->validateConfiguration($configuration);
-
-        $this->configurations[$configuration->getName()] = $configuration;
-    }
-
-    /**
-     * @return \Darvin\ConfigBundle\Configuration\ConfigurationInterface[]
-     */
-    public function getAllConfigurations()
+    public function getAllConfigurations(): array
     {
         return $this->configurations;
     }
 
     /**
-     * Saves configurations.
+     * {@inheritDoc}
      */
-    public function saveAll()
+    public function saveAll(): void
     {
         foreach ($this->configurations as $configuration) {
             $configuration->save();
@@ -80,19 +61,35 @@ class ConfigurationPool
     }
 
     /**
+     * @param \Darvin\ConfigBundle\Configuration\ConfigurationInterface $configuration Configuration
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function addConfiguration(ConfigurationInterface $configuration): void
+    {
+        if (isset($this->configurations[$configuration->getName()])) {
+            throw new \InvalidArgumentException(sprintf('Configuration "%s" already added.', $configuration->getName()));
+        }
+
+        $this->validate($configuration);
+
+        $this->configurations[$configuration->getName()] = $configuration;
+    }
+
+    /**
      * @param \Darvin\ConfigBundle\Configuration\ConfigurationInterface $configuration Configuration to validate
      *
      * @throws \UnexpectedValueException
      */
-    private function validateConfiguration(ConfigurationInterface $configuration)
+    private function validate(ConfigurationInterface $configuration): void
     {
         $parameterNames = [];
 
         foreach ($configuration->getModel() as $parameterModel) {
-            $parameterName = $parameterModel->getName();
-            $parameterType = $parameterModel->getType();
+            $parameterName         = $parameterModel->getName();
+            $parameterType         = $parameterModel->getType();
             $parameterDefaultValue = $parameterModel->getDefaultValue();
-            $parameterDataType = $parameterModel->getDataType();
+            $parameterDataType     = $parameterModel->getDataType();
 
             if (null !== $parameterDefaultValue && gettype($parameterDefaultValue) !== $parameterDataType) {
                 $message = sprintf(
