@@ -16,7 +16,7 @@ use Doctrine\Common\Util\ClassUtils;
 /**
  * Configuration parameter value converter
  */
-class ParameterValueConverter
+class ParameterValueConverter implements ParameterValueConverterInterface
 {
     /**
      * @var \Doctrine\Common\Persistence\ObjectManager
@@ -32,11 +32,7 @@ class ParameterValueConverter
     }
 
     /**
-     * @param string $value   Parameter value
-     * @param string $type    Parameter type
-     * @param array  $options Parameter options
-     *
-     * @return mixed
+     * {@inheritDoc}
      */
     public function fromString(string $value, string $type, array $options)
     {
@@ -44,11 +40,7 @@ class ParameterValueConverter
     }
 
     /**
-     * @param mixed  $value   Parameter value
-     * @param string $type    Parameter type
-     * @param array  $options Parameter options
-     *
-     * @return string
+     * {@inheritDoc}
      */
     public function toString($value, string $type, array $options): string
     {

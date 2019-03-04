@@ -12,7 +12,7 @@ namespace Darvin\ConfigBundle\Configuration;
 
 use Darvin\ConfigBundle\Parameter\Parameter;
 use Darvin\ConfigBundle\Parameter\ParameterModel;
-use Darvin\ConfigBundle\Parameter\ParameterValueConverter;
+use Darvin\ConfigBundle\Parameter\ParameterValueConverterInterface;
 use Darvin\ConfigBundle\Repository\ParameterRepositoryInterface;
 
 /**
@@ -26,7 +26,7 @@ class ConfigurationPool
     private $parameterRepository;
 
     /**
-     * @var \Darvin\ConfigBundle\Parameter\ParameterValueConverter
+     * @var \Darvin\ConfigBundle\Parameter\ParameterValueConverterInterface
      */
     private $parameterValueConverter;
 
@@ -46,13 +46,11 @@ class ConfigurationPool
     private $initialized;
 
     /**
-     * @param \Darvin\ConfigBundle\Repository\ParameterRepositoryInterface $parameterRepository     Configuration parameter repository
-     * @param \Darvin\ConfigBundle\Parameter\ParameterValueConverter       $parameterValueConverter Parameter value converter
+     * @param \Darvin\ConfigBundle\Repository\ParameterRepositoryInterface    $parameterRepository     Configuration parameter repository
+     * @param \Darvin\ConfigBundle\Parameter\ParameterValueConverterInterface $parameterValueConverter Parameter value converter
      */
-    public function __construct(
-        ParameterRepositoryInterface $parameterRepository,
-        ParameterValueConverter $parameterValueConverter
-    ) {
+    public function __construct(ParameterRepositoryInterface $parameterRepository, ParameterValueConverterInterface $parameterValueConverter)
+    {
         $this->parameterRepository = $parameterRepository;
         $this->parameterValueConverter = $parameterValueConverter;
         $this->configurations = [];
