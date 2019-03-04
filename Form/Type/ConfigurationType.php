@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\ConfigBundle\Form\Type\Configuration;
+namespace Darvin\ConfigBundle\Form\Type;
 
 use Darvin\ConfigBundle\Configuration\ConfigurationInterface;
 use Darvin\ConfigBundle\Parameter\ParameterModel;
