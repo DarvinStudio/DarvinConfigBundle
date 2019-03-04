@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -38,7 +38,7 @@ class ParameterValueConverter
      *
      * @return mixed
      */
-    public function fromString($value, $type, array $options)
+    public function fromString(string $value, string $type, array $options)
     {
         return $this->convert($value, $type, $options, $this->getFromStringCallbacks());
     }
@@ -50,7 +50,7 @@ class ParameterValueConverter
      *
      * @return string
      */
-    public function toString($value, $type, array $options)
+    public function toString($value, string $type, array $options): string
     {
         return $this->convert($value, $type, $options, $this->getToStringCallbacks());
     }
@@ -63,7 +63,7 @@ class ParameterValueConverter
      *
      * @return mixed
      */
-    private function convert($value, $type, array $options, array $convertCallbacks)
+    private function convert($value, string $type, array $options, array $convertCallbacks)
     {
         if (null === $value) {
             return ParameterModel::TYPE_STRING === $type ? '' : null;
@@ -80,7 +80,7 @@ class ParameterValueConverter
     /**
      * @return array
      */
-    private function getFromStringCallbacks()
+    private function getFromStringCallbacks(): array
     {
         $om = $this->om;
 
@@ -99,7 +99,7 @@ class ParameterValueConverter
     /**
      * @return array
      */
-    private function getToStringCallbacks()
+    private function getToStringCallbacks(): array
     {
         $om = $this->om;
 
