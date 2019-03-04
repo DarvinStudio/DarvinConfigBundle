@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -28,10 +28,7 @@ use Symfony\Component\Validator\Constraints\Valid;
  */
 class ConfigurationType extends AbstractType
 {
-    /**
-     * @var array
-     */
-    private static $defaultFieldTypes = [
+    private const DEFAULT_FIELD_TYPES = [
         ParameterModel::TYPE_ARRAY   => CollectionType::class,
         ParameterModel::TYPE_BOOL    => CheckboxType::class,
         ParameterModel::TYPE_ENTITY  => EntityType::class,
@@ -42,7 +39,7 @@ class ConfigurationType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $configuration = $this->getConfiguration($options);
 
@@ -64,12 +61,10 @@ class ConfigurationType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
-            ->setDefaults([
-                'csrf_token_id' => md5(__FILE__.$this->getBlockPrefix()),
-            ])
+            ->setDefault('csrf_token_id', md5(__FILE__.$this->getBlockPrefix()))
             ->remove('data_class')
             ->setRequired([
                 'configuration',
@@ -82,7 +77,7 @@ class ConfigurationType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'darvin_config_configuration';
     }
@@ -90,17 +85,17 @@ class ConfigurationType extends AbstractType
     /**
      * @param \Darvin\ConfigBundle\Parameter\ParameterModel $parameterModel Parameter model
      *
-     * @return string
+     * @return string|null
      */
-    private function getFieldType(ParameterModel $parameterModel)
+    private function getFieldType(ParameterModel $parameterModel): ?string
     {
         $parameterOptions = $parameterModel->getOptions();
 
         if (isset($parameterOptions['form']['type'])) {
             return $parameterOptions['form']['type'];
         }
-        if (isset(self::$defaultFieldTypes[$parameterModel->getType()])) {
-            return self::$defaultFieldTypes[$parameterModel->getType()];
+        if (isset(self::DEFAULT_FIELD_TYPES[$parameterModel->getType()])) {
+            return self::DEFAULT_FIELD_TYPES[$parameterModel->getType()];
         }
 
         return null;
@@ -112,7 +107,7 @@ class ConfigurationType extends AbstractType
      *
      * @return array
      */
-    private function getFieldOptions(ParameterModel $parameterModel, ConfigurationInterface $configuration)
+    private function getFieldOptions(ParameterModel $parameterModel, ConfigurationInterface $configuration): array
     {
         $fieldOptions = [
             'required' => false,
@@ -152,7 +147,7 @@ class ConfigurationType extends AbstractType
      *
      * @return \Darvin\ConfigBundle\Configuration\ConfigurationInterface
      */
-    private function getConfiguration(array $options)
+    private function getConfiguration(array $options): ConfigurationInterface
     {
         return $options['configuration'];
     }
