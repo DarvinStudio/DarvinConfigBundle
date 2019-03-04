@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2015, Darvin Studio
+ * @copyright Copyright (c) 2015-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -16,32 +16,27 @@ namespace Darvin\ConfigBundle\Configuration;
 interface ConfigurationInterface
 {
     /**
-     * @param \Darvin\ConfigBundle\Configuration\ConfigurationPool $configurationPool Configuration pool
+     * @return \Darvin\ConfigBundle\Parameter\ParameterModel[]|iterable
      */
-    public function setConfigurationPool(ConfigurationPool $configurationPool);
-
-    /**
-     * @return \Darvin\ConfigBundle\Parameter\ParameterModel[]
-     */
-    public function getModel();
+    public function getModel(): iterable;
 
     /**
      * Saves configuration.
      */
-    public function save();
+    public function save(): void;
 
     /**
      * @param array $values Parameter values
      */
-    public function setValues(array $values);
+    public function setValues(array $values): void;
 
     /**
      * @return array
      */
-    public function getValues();
+    public function getValues(): array;
 
     /**
      * @return string
      */
-    public function getName();
+    public function getName(): string;
 }
