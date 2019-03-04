@@ -32,6 +32,11 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     private $parameterValueConverter;
 
     /**
+     * @var string|null
+     */
+    private $name;
+
+    /**
      * @var \Darvin\ConfigBundle\Parameter\Parameter[]|null
      */
     private $persistedParameters = null;
@@ -126,6 +131,18 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     public function save(): void
     {
         $this->parameterRepository->saveConfigurationParameters($this->getName(), $this->getParameters());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName(): string
+    {
+        if (null === $this->name) {
+            $this->name = StringsUtil::toUnderscore(preg_replace('/^.*\\\|(Config|Configuration)$/', '', get_class($this)));
+        }
+
+        return $this->name;
     }
 
     /**
