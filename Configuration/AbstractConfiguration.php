@@ -130,7 +130,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      */
     public function save(): void
     {
-        $this->parameterRepository->saveConfigurationParameters($this->getName(), $this->getParameters());
+        $this->parameterRepository->saveConfigurationParameters($this->getName(), $this->getParametersToSave());
     }
 
     /**
@@ -213,7 +213,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      * @return \Darvin\ConfigBundle\Parameter\Parameter[]
      * @throws \UnexpectedValueException
      */
-    private function getParameters(): array
+    private function getParametersToSave(): array
     {
         $parameters = [];
         $values     = $this->getValues();
@@ -229,7 +229,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
 
             $value = $values[$parameterName];
 
-            if ($value == $parameterModel->getDefaultValue() && !isset($this->persistedParameters[$parameterName])) {
+            if ($value == $parameterModel->getDefaultValue()) {
                 continue;
             }
             if (null !== $value && gettype($value) !== $parameterDataType) {
