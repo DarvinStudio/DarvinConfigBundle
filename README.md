@@ -7,26 +7,19 @@ Create class which implements Darvin\ConfigBundle\Configuration\ConfigurationInt
  or extends Darvin\ConfigBundle\Configuration\AbstractConfiguration:
 
 ```php
-// AppBundle\Configuration\Configuration.php
+// AppBundle\Config\AppConfig.php
 
 use Darvin\ConfigBundle\Configuration\AbstractConfiguration;
 use Darvin\ConfigBundle\Parameter\ParameterModel;
 
-class Configuration extends AbstractConfiguration
+class AppConfig extends AbstractConfiguration
 {
-    public function getModel()
+    public function getModel(): iterable
     {
-        return array(
-            new ParameterModel('array_var', ParameterModel::TYPE_ARRAY, array(1, 2, 3)),
-            new ParameterModel('boolean_var', ParameterModel::TYPE_BOOL, false),
-            new ParameterModel('integer_var', ParameterModel::TYPE_INTEGER, 777),
-            new ParameterModel('string_var', ParameterModel::TYPE_STRING, 'test123'),
-        );
-    }
-
-    public function getName()
-    {
-        return 'app_configuration';
+        yield new ParameterModel('array_var', ParameterModel::TYPE_ARRAY, array(1, 2, 3));
+        yield new ParameterModel('boolean_var', ParameterModel::TYPE_BOOL, false);
+        yield new ParameterModel('integer_var', ParameterModel::TYPE_INTEGER, 777);
+        yield new ParameterModel('string_var', ParameterModel::TYPE_STRING, 'test123');
     }
 }
 ```
@@ -35,8 +28,8 @@ Define created class as a service tagged with "darvin_config.configuration" tag:
 
 ```yaml
 services:
-    app.configuration:
-        class: AppBundle\Configuration\Configuration
+    app.config:
+        class: AppBundle\Config\AppConfig
         tags:
             - { name: darvin_config.configuration }
 ```
