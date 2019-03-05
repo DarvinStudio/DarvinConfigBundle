@@ -38,17 +38,23 @@ class ParameterRepository extends ServiceEntityRepository implements ParameterRe
      */
     public function saveConfigurationParameters(string $configuration, array $parameters): void
     {
-        $entities = [];
+        $entities = $this->getByConfiguration($configuration);
 
-        foreach ($this->getByConfiguration($configuration) as $entity) {
-            $entities[$entity->getName()] = $entity;
-        }
         foreach ($parameters as $parameter) {
-            $entity = $entities[$parameter->getName()] ?? new ParameterEntity();
+            if (isset($entities[$parameter->getName()])) {
+                $entity = $entities[$parameter->getName()];
+
+                unset($entities[$parameter->getName()]);
+            } else {
+                $entity = new ParameterEntity();
+            }
 
             $entity->updateFromParameter($parameter);
 
             $this->_em->persist($entity);
+        }
+        foreach ($entities as $entity) {
+            $this->_em->remove($entity);
         }
 
         $this->_em->flush();
@@ -70,7 +76,7 @@ class ParameterRepository extends ServiceEntityRepository implements ParameterRe
                     $entities[$entity->getConfiguration()] = [];
                 }
 
-                $entities[$entity->getConfiguration()][] = $entity;
+                $entities[$entity->getConfiguration()][$entity->getName()] = $entity;
             }
 
             $this->entities = $entities;
