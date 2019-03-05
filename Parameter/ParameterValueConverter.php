@@ -79,8 +79,8 @@ class ParameterValueConverter implements ParameterValueConverterInterface
         return [
             ParameterModel::TYPE_ARRAY   => 'unserialize',
             ParameterModel::TYPE_BOOL    => 'boolval',
-            ParameterModel::TYPE_ENTITY  => function ($id, $options) use ($om) {
-                return !empty($id) ? $om->find($options['class'], $id) : null;
+            ParameterModel::TYPE_ENTITY  => function ($id, array $options) use ($om) {
+                return null !== $id ? $om->find($options['class'], $id) : null;
             },
             ParameterModel::TYPE_FLOAT   => 'floatval',
             ParameterModel::TYPE_INTEGER => 'intval',
@@ -99,13 +99,13 @@ class ParameterValueConverter implements ParameterValueConverterInterface
             ParameterModel::TYPE_ARRAY   => 'serialize',
             ParameterModel::TYPE_BOOL    => 'strval',
             ParameterModel::TYPE_ENTITY  => function ($entity) use ($om) {
-                if (empty($entity)) {
+                if (null === $entity) {
                     return '';
                 }
 
                 $ids = $om->getClassMetadata(ClassUtils::getClass($entity))->getIdentifierValues($entity);
 
-                return (string) reset($ids);
+                return (string)reset($ids);
             },
             ParameterModel::TYPE_FLOAT   => 'strval',
             ParameterModel::TYPE_INTEGER => 'strval',
