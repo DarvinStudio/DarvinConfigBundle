@@ -66,11 +66,11 @@ class ParameterRepository extends ServiceEntityRepository implements ParameterRe
 
             /** @var \Darvin\ConfigBundle\Entity\ParameterEntity $entity */
             foreach ($this->findAll() as $entity) {
-                if (!isset($entities[$entity->getConfigurationName()])) {
-                    $entities[$entity->getConfigurationName()] = [];
+                if (!isset($entities[$entity->getConfiguration()])) {
+                    $entities[$entity->getConfiguration()] = [];
                 }
 
-                $entities[$entity->getConfigurationName()][] = $entity;
+                $entities[$entity->getConfiguration()][] = $entity;
             }
 
             $this->entities = $entities;

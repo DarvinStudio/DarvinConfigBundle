@@ -33,13 +33,13 @@ class ConfigurationPool implements ConfigurationPoolInterface
     /**
      * {@inheritDoc}
      */
-    public function __get(string $configurationName): ConfigurationInterface
+    public function __get(string $configuration): ConfigurationInterface
     {
-        if (!isset($this->configurations[$configurationName])) {
-            throw new \InvalidArgumentException(sprintf('Configuration "%s" does not exist.', $configurationName));
+        if (!isset($this->configurations[$configuration])) {
+            throw new \InvalidArgumentException(sprintf('Configuration "%s" does not exist.', $configuration));
         }
 
-        return $this->configurations[$configurationName];
+        return $this->configurations[$configuration];
     }
 
     /**

@@ -18,7 +18,7 @@ class Parameter
     /**
      * @var string
      */
-    private $configurationName;
+    private $configuration;
 
     /**
      * @var string
@@ -36,14 +36,14 @@ class Parameter
     private $value;
 
     /**
-     * @param string $configurationName Configuration name
-     * @param string $name              Name
-     * @param string $type              Type
-     * @param mixed  $value             Value
+     * @param string $configuration Configuration name
+     * @param string $name          Name
+     * @param string $type          Type
+     * @param mixed  $value         Value
      */
-    public function __construct(string $configurationName, string $name, string $type, $value)
+    public function __construct(string $configuration, string $name, string $type, $value)
     {
-        $this->configurationName = $configurationName;
+        $this->configuration = $configuration;
         $this->name = $name;
         $this->type = $type;
         $this->value = $value;
@@ -52,9 +52,9 @@ class Parameter
     /**
      * @return string
      */
-    public function getConfigurationName(): string
+    public function getConfiguration(): string
     {
-        return $this->configurationName;
+        return $this->configuration;
     }
 
     /**

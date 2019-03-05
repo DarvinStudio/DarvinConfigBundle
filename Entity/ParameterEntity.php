@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Configuration parameter entity
  *
  * @ORM\Entity(repositoryClass="Darvin\ConfigBundle\Repository\ParameterRepository")
- * @ORM\Table(name="configuration")
+ * @ORM\Table(name="config")
  */
 class ParameterEntity
 {
@@ -35,7 +35,7 @@ class ParameterEntity
      *
      * @ORM\Column
      */
-    private $configurationName;
+    private $configuration;
 
     /**
      * @var string
@@ -63,7 +63,7 @@ class ParameterEntity
      */
     public function toParameter(): Parameter
     {
-        return new Parameter($this->configurationName, $this->name, $this->type, $this->value);
+        return new Parameter($this->configuration, $this->name, $this->type, $this->value);
     }
 
     /**
@@ -71,7 +71,7 @@ class ParameterEntity
      */
     public function updateFromParameter(Parameter $parameter): void
     {
-        $this->configurationName = $parameter->getConfigurationName();
+        $this->configuration = $parameter->getConfiguration();
         $this->name = $parameter->getName();
         $this->type = $parameter->getType();
         $this->value = $parameter->getValue();
@@ -88,9 +88,9 @@ class ParameterEntity
     /**
      * @return string
      */
-    public function getConfigurationName(): ?string
+    public function getConfiguration(): ?string
     {
-        return $this->configurationName;
+        return $this->configuration;
     }
 
     /**

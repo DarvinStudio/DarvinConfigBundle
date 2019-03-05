@@ -16,12 +16,12 @@ namespace Darvin\ConfigBundle\Configuration;
 interface ConfigurationPoolInterface
 {
     /**
-     * @param string $configurationName Configuration name
+     * @param string $configuration Configuration name
      *
      * @return \Darvin\ConfigBundle\Configuration\ConfigurationInterface
      * @throws \InvalidArgumentException
      */
-    public function __get(string $configurationName): ConfigurationInterface;
+    public function __get(string $configuration): ConfigurationInterface;
 
     /**
      * @return \Darvin\ConfigBundle\Configuration\ConfigurationInterface[]
