@@ -128,7 +128,9 @@ class ConfigurationType extends AbstractType
         if (ParameterModel::TYPE_ENTITY === $parameterModel->getType() && !isset($fieldOptions['class'])) {
             $fieldOptions['class'] = $parameterOptions['class'];
         }
-        if (ParameterModel::TYPE_OBJECT === $parameterModel->getType()) {
+        if (ParameterModel::TYPE_OBJECT === $parameterModel->getType()
+            || (ParameterModel::TYPE_ARRAY === $parameterModel->getType() && is_object($fieldOptions['prototype_data'] ?? null))
+        ) {
             if (!isset($fieldOptions['constraints'])) {
                 $fieldOptions['constraints'] = [];
             }
