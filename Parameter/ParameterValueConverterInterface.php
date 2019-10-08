@@ -29,7 +29,7 @@ interface ParameterValueConverterInterface
      * @param string $type    Parameter type
      * @param array  $options Parameter options
      *
-     * @return string
+     * @return string|null
      */
-    public function toString($value, string $type, array $options): string;
+    public function toString($value, string $type, array $options): ?string;
 }

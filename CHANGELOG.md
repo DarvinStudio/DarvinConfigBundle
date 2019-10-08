@@ -20,3 +20,5 @@ new ParameterModel('map', ParameterModel::TYPE_OBJECT, new Map(), [
 5.1.9: Remove constructor from abstract configuration class to make it more easy extendable.
 
 6.0.1: Add "Valid" validation constraint to arrays of objects.
+
+6.0.2: Allow to return null in ParameterValueConverterInterface::toString().

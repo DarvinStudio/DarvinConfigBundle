@@ -42,7 +42,7 @@ class ParameterValueConverter implements ParameterValueConverterInterface
     /**
      * {@inheritDoc}
      */
-    public function toString($value, string $type, array $options): string
+    public function toString($value, string $type, array $options): ?string
     {
         return $this->convert($value, $type, $options, $this->getToStringCallbacks());
     }
