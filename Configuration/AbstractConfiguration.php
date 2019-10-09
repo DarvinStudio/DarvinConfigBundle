@@ -229,10 +229,10 @@ abstract class AbstractConfiguration implements ConfigurationInterface
 
             $value = $values[$parameterName];
 
-            if ($value == $parameterModel->getDefaultValue()) {
+            if (null === $value || $value == $parameterModel->getDefaultValue()) {
                 continue;
             }
-            if (null !== $value && gettype($value) !== $parameterDataType) {
+            if (gettype($value) !== $parameterDataType) {
                 $message = sprintf(
                     'Parameter "%s" of configuration "%s" must have value of "%s" type, "%s" type value provided.',
                     $parameterName,

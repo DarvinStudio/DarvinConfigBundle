@@ -24,3 +24,5 @@ new ParameterModel('map', ParameterModel::TYPE_OBJECT, new Map(), [
 6.0.2: Allow to return null in ParameterValueConverterInterface::toString().
 
 6.0.3: Detect data class in configuration form type.
+
+6.0.4: Do not store null values.
