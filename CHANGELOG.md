@@ -25,4 +25,8 @@ new ParameterModel('map', ParameterModel::TYPE_OBJECT, new Map(), [
 
 6.0.3: Detect data class in configuration form type.
 
-6.0.4: Do not store null values.
+6.0.4:
+ 
+- Do not store null values.
+
+- Reset values to default on save.

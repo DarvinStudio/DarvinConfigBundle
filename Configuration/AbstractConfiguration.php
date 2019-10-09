@@ -130,7 +130,19 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      */
     public function save(): void
     {
-        $this->parameterRepository->saveConfigurationParameters($this->getName(), $this->getParametersToSave());
+        $names      = [];
+        $parameters = $this->getParametersToSave();
+
+        foreach ($parameters as $parameter) {
+            $names[$parameter->getName()] = $parameter->getName();
+        }
+        foreach ($this->getModel() as $parameterModel) {
+            if (!isset($names[$parameterModel->getName()])) {
+                $this->values[$parameterModel->getName()] = $parameterModel->getDefaultValue();
+            }
+        }
+
+        $this->parameterRepository->saveConfigurationParameters($this->getName(), $parameters);
     }
 
     /**
