@@ -20,6 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Valid;
 
@@ -64,14 +65,14 @@ class ConfigurationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
-            ->setDefault('csrf_token_id', md5(__FILE__.$this->getBlockPrefix()))
-            ->remove('data_class')
-            ->setRequired([
-                'configuration',
-                'data_class',
-            ])
+            ->setRequired('configuration')
             ->setAllowedTypes('configuration', ConfigurationInterface::class)
-            ->setAllowedTypes('data_class', 'string');
+            ->setDefaults([
+                'csrf_token_id' => md5(__FILE__.$this->getBlockPrefix()),
+                'data_class'    => function (Options $options) {
+                    return get_class($options['configuration']);
+                },
+            ]);
     }
 
     /**
