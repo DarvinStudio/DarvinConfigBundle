@@ -30,3 +30,5 @@ new ParameterModel('map', ParameterModel::TYPE_OBJECT, new Map(), [
 - Do not store null values.
 
 - Reset values to default on save.
+
+6.1.0: Add ConfigurationInterface::getOptions().

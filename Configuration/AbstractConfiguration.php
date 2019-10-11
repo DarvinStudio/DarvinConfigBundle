@@ -148,6 +148,14 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     /**
      * {@inheritDoc}
      */
+    public function getOptions(): array
+    {
+        return [];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getName(): string
     {
         if (null === $this->name) {

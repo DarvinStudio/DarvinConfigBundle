@@ -51,6 +51,11 @@ interface ConfigurationInterface
     public function save(): void;
 
     /**
+     * @return array
+     */
+    public function getOptions(): array;
+
+    /**
      * @return string
      */
     public function getName(): string;
