@@ -26,7 +26,7 @@ class DarvinConfigExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
-        (new ConfigLoader($container, __DIR__.'/../Resources/config'))->load([
+        (new ConfigLoader($container, __DIR__.'/../Resources/config/services'))->load([
             'configuration',
             'parameter',
         ]);

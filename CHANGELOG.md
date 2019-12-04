@@ -32,3 +32,5 @@ new ParameterModel('map', ParameterModel::TYPE_OBJECT, new Map(), [
 - Reset values to default on save.
 
 6.1.0: Add ConfigurationInterface::getOptions().
+
+6.1.2: Move service config to "services" dir.
