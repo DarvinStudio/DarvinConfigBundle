@@ -22,12 +22,14 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class DarvinConfigExtension extends Extension
 {
+    public const TAG_CONFIGURATION = 'darvin_config.configuration';
+
     /**
      * {@inheritDoc}
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
-        $container->registerForAutoconfiguration(ConfigurationInterface::class)->addTag('darvin_config.configuration');
+        $container->registerForAutoconfiguration(ConfigurationInterface::class)->addTag(self::TAG_CONFIGURATION);
 
         (new ConfigLoader($container, __DIR__.'/../Resources/config/services'))->load([
             'configuration',

@@ -10,6 +10,7 @@
 
 namespace Darvin\ConfigBundle\DependencyInjection\Compiler;
 
+use Darvin\ConfigBundle\DependencyInjection\DarvinConfigExtension;
 use Darvin\Utils\DependencyInjection\ServiceSorter;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -29,7 +30,7 @@ class AddConfigurationsPass implements CompilerPassInterface
         $parameterValueConverter = [new Reference('darvin_config.parameter.value_converter')];
         $pool                    = $container->getDefinition('darvin_config.configuration.pool');
 
-        foreach (array_keys((new ServiceSorter())->sort($container->findTaggedServiceIds('darvin_config.configuration'))) as $id) {
+        foreach (array_keys((new ServiceSorter())->sort($container->findTaggedServiceIds(DarvinConfigExtension::TAG_CONFIGURATION))) as $id) {
             $container->getDefinition($id)
                 ->addMethodCall('setParameterRepository', $parameterRepository)
                 ->addMethodCall('setParameterValueConverter', $parameterValueConverter);
