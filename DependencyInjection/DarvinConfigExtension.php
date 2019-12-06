@@ -10,6 +10,7 @@
 
 namespace Darvin\ConfigBundle\DependencyInjection;
 
+use Darvin\ConfigBundle\Configuration\ConfigurationInterface;
 use Darvin\Utils\DependencyInjection\ConfigLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -26,6 +27,8 @@ class DarvinConfigExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
+        $container->registerForAutoconfiguration(ConfigurationInterface::class)->addTag('darvin_config.configuration');
+
         (new ConfigLoader($container, __DIR__.'/../Resources/config/services'))->load([
             'configuration',
             'parameter',
