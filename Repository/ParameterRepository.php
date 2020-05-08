@@ -12,7 +12,6 @@ namespace Darvin\ConfigBundle\Repository;
 
 use Darvin\ConfigBundle\Entity\ParameterEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\QueryBuilder;
 
 /**
  * Configuration parameter entity repository
@@ -72,7 +71,7 @@ class ParameterRepository extends ServiceEntityRepository implements ParameterRe
             $entities = [];
 
             /** @var \Darvin\ConfigBundle\Entity\ParameterEntity $entity */
-            foreach ($this->createDefaultBuilder()->getQuery()->enableResultCache()->getResult() as $entity) {
+            foreach ($this->findAll() as $entity) {
                 if (!isset($entities[$entity->getConfiguration()])) {
                     $entities[$entity->getConfiguration()] = [];
                 }
@@ -84,13 +83,5 @@ class ParameterRepository extends ServiceEntityRepository implements ParameterRe
         }
 
         return $this->entities[$configuration] ?? [];
-    }
-
-    /**
-     * @return \Doctrine\ORM\QueryBuilder
-     */
-    private function createDefaultBuilder(): QueryBuilder
-    {
-        return $this->createQueryBuilder('o');
     }
 }
