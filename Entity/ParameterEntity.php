@@ -24,7 +24,7 @@ class ParameterEntity
     /**
      * @var string
      *
-     * @ORM\Column(length=36, unique=true)
+     * @ORM\Column(unique=true)
      * @ORM\GeneratedValue(strategy="UUID")
      * @ORM\Id
      */
