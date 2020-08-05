@@ -36,3 +36,5 @@ new ParameterModel('map', ParameterModel::TYPE_OBJECT, new Map(), [
 6.1.2: Move service config to "services" dir.
 
 6.1.3: Register interfaces for autoconfiguration.
+
+6.1.6: Disable CSRF protection.

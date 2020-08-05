@@ -68,8 +68,8 @@ class ConfigurationType extends AbstractType
             ->setRequired('configuration')
             ->setAllowedTypes('configuration', ConfigurationInterface::class)
             ->setDefaults([
-                'csrf_token_id' => md5(__FILE__.$this->getBlockPrefix()),
-                'data_class'    => function (Options $options) {
+                'csrf_protection' => false,
+                'data_class'      => function (Options $options) {
                     return get_class($options['configuration']);
                 },
             ]);
