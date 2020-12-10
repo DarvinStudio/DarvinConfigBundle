@@ -10,7 +10,7 @@
 
 namespace Darvin\ConfigBundle\Parameter;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\Util\ClassUtils;
 
 /**
@@ -19,12 +19,12 @@ use Doctrine\Common\Util\ClassUtils;
 class ParameterValueConverter implements ParameterValueConverterInterface
 {
     /**
-     * @var \Doctrine\Common\Persistence\ObjectManager
+     * @var \Doctrine\Persistence\ObjectManager
      */
     private $om;
 
     /**
-     * @param \Doctrine\Common\Persistence\ObjectManager $om Object manager
+     * @param \Doctrine\Persistence\ObjectManager $om Object manager
      */
     public function __construct(ObjectManager $om)
     {
