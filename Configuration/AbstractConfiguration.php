@@ -249,7 +249,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
 
             $value = $values[$parameterName];
 
-            if (null === $value || $value == $parameterModel->getDefaultValue()) {
+            if (null === $value || $this->isDefault($value, $parameterModel)) {
                 continue;
             }
             if (gettype($value) !== $parameterDataType) {
@@ -270,6 +270,21 @@ abstract class AbstractConfiguration implements ConfigurationInterface
         }
 
         return $parameters;
+    }
+
+    /**
+     * @param mixed                                         $value          Value
+     * @param \Darvin\ConfigBundle\Parameter\ParameterModel $parameterModel Parameter model
+     *
+     * @return bool
+     */
+    private function isDefault($value, ParameterModel $parameterModel): bool
+    {
+        if (is_scalar($value)) {
+            return $value === $parameterModel->getDefaultValue();
+        }
+
+        return $value == $parameterModel->getDefaultValue();
     }
 
     /**

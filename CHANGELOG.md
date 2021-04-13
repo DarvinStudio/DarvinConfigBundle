@@ -38,3 +38,5 @@ new ParameterModel('map', ParameterModel::TYPE_OBJECT, new Map(), [
 6.1.3: Register interfaces for autoconfiguration.
 
 6.1.6: Disable CSRF protection.
+
+6.1.8: Use strict comparison to check if scalar value is default one.
